@@ -1,0 +1,2605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#8B1A1A">
+<meta name="description" content="2026 — 365 Days Machine Learning Mini Projects">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>2026 · ML365</title>
+<style>
+/* ============================================================
+   DESIGN SYSTEM — VERMILION GOLD MONOCHROMATIC
+   ============================================================ */
+:root {
+  --clr-primary:     #8B1A1A;
+  --clr-primary-soft:#B03030;
+  --clr-primary-mute:#CC6060;
+  --clr-gold:        #C9922A;
+  --clr-gold-light:  #E8B84B;
+  --clr-bg:          #FBF7F2;
+  --clr-bg2:         #F3EDE4;
+  --clr-surface:     #FFFFFF;
+  --clr-text:        #1A0F0F;
+  --clr-text2:       #4A2F2F;
+  --clr-text3:       #7A5A5A;
+  --clr-border:      #E8D8D0;
+  --clr-glow:        rgba(139,26,26,0.18);
+
+  /* Typography */
+  --ff-head: Georgia, 'Times New Roman', serif;
+  --ff-body: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --fs-display: clamp(1.953rem, 4vw, 2.441rem);
+  --fs-h1:      clamp(1.563rem, 3vw, 1.953rem);
+  --fs-body:    1rem;
+  --fs-caption: 0.8rem;
+
+  /* Spacing (8px grid) */
+  --sp-1: 8px; --sp-2: 16px; --sp-3: 24px;
+  --sp-4: 32px; --sp-5: 40px; --sp-6: 48px;
+
+  /* Shadows */
+  --sh-sm: 0 2px 8px rgba(139,26,26,0.08), 0 1px 3px rgba(0,0,0,0.06);
+  --sh-md: 0 4px 20px rgba(139,26,26,0.12), 0 2px 8px rgba(0,0,0,0.08);
+  --sh-lg: 0 8px 40px rgba(139,26,26,0.16), 0 4px 16px rgba(0,0,0,0.10);
+  --sh-card: 0 1px 4px rgba(139,26,26,0.06), 0 4px 16px rgba(139,26,26,0.08);
+
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 20px;
+  --nav-h: 72px;
+  --transition: all 0.22s cubic-bezier(0.4,0,0.2,1);
+}
+
+[data-theme="dark"] {
+  --clr-bg:      #120808;
+  --clr-bg2:     #1E0F0F;
+  --clr-surface: #2A1414;
+  --clr-text:    #F5EDE8;
+  --clr-text2:   #D4B0A8;
+  --clr-text3:   #A07878;
+  --clr-border:  #3A2020;
+  --clr-glow:    rgba(201,146,42,0.25);
+  --sh-sm: 0 2px 8px rgba(0,0,0,0.3);
+  --sh-md: 0 4px 20px rgba(0,0,0,0.4);
+  --sh-lg: 0 8px 40px rgba(0,0,0,0.5);
+  --sh-card: 0 2px 12px rgba(0,0,0,0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--ff-body);
+  font-size: var(--fs-body);
+  background: var(--clr-bg);
+  color: var(--clr-text);
+  min-height: 100vh;
+  padding-bottom: var(--nav-h);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+button, select, input { font-family: inherit; font-size: inherit; }
+img { display: block; max-width: 100%; }
+
+/* ============================================================
+   FOCUS RINGS (WCAG AAA)
+   ============================================================ */
+:focus-visible {
+  outline: 3px solid var(--clr-gold);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--clr-bg2); }
+::-webkit-scrollbar-thumb { background: var(--clr-primary-mute); border-radius: 99px; }
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.page { display: none; padding: var(--sp-3) var(--sp-2) var(--sp-2); min-height: calc(100vh - var(--nav-h)); }
+.page.active { display: block; animation: fadeIn 0.28s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+.container { max-width: 900px; margin: 0 auto; }
+
+/* ============================================================
+   BOTTOM NAVIGATION
+   ============================================================ */
+#bottom-nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: var(--nav-h);
+  background: var(--clr-surface);
+  border-top: 1px solid var(--clr-border);
+  display: flex;
+  box-shadow: 0 -4px 24px rgba(139,26,26,0.10);
+  z-index: 1000;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: none;
+  border-top: 3px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  padding: var(--sp-1);
+  position: relative;
+  min-height: 44px;
+  color: var(--clr-text3);
+  transition: color 0.22s cubic-bezier(0.4,0,0.2,1);
+  -webkit-tap-highlight-color: transparent;
+}
+.nav-item::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 0; height: 3px;
+  background: var(--clr-primary);
+  border-radius: 0 0 3px 3px;
+  transition: width 0.22s ease;
+}
+.nav-item.active::before { width: 80%; }
+.nav-item.active {
+  color: var(--clr-primary);
+}
+.nav-icon-wrap {
+  width: 40px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-sm);
+  transition: background 0.22s cubic-bezier(0.4,0,0.2,1);
+}
+.nav-item.active .nav-icon-wrap {
+  background: rgba(139,26,26,0.10);
+}
+.nav-icon {
+  width: 24px; height: 24px;
+  display: block;
+}
+.nav-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   CARDS
+   ============================================================ */
+.card {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius);
+  padding: var(--sp-3);
+  box-shadow: var(--sh-card);
+  transition: var(--transition);
+}
+.card.interactive:hover { box-shadow: var(--sh-md); transform: translateY(-2px); }
+
+.card-sm { padding: var(--sp-2); border-radius: var(--radius-sm); }
+
+/* ============================================================
+   TAGS & BADGES
+   ============================================================ */
+.tag {
+  display: inline-flex; align-items: center;
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  background: var(--clr-bg2);
+  color: var(--clr-text2);
+  border: 1px solid var(--clr-border);
+  white-space: nowrap;
+}
+.tag-sm { padding: 1px 7px; font-size: 10px; border-radius: 99px; font-weight: 600; display: inline-flex; align-items: center; border: 1px solid transparent; }
+.tag-primary { background: rgba(139,26,26,0.10); color: var(--clr-primary); border-color: rgba(139,26,26,0.20); }
+.tag-gold { background: rgba(201,146,42,0.12); color: var(--clr-gold); border-color: rgba(201,146,42,0.25); }
+.tag-green { background: rgba(34,120,80,0.10); color: #1E7850; border-color: rgba(34,120,80,0.20); }
+
+.badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 22px; height: 22px;
+  padding: 0 6px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--clr-primary);
+  color: #FFF;
+}
+
+.diff-beginner    { background: rgba(34,120,80,0.12);  color: #155C3A; border: 1px solid rgba(34,120,80,0.25); }
+.diff-intermediate{ background: rgba(201,146,42,0.12); color: #7A5200; border: 1px solid rgba(201,146,42,0.25); }
+.diff-advanced    { background: rgba(139,26,26,0.12);  color: #8B1A1A; border: 1px solid rgba(139,26,26,0.25); }
+.diff-expert      { background: rgba(80,20,80,0.12);   color: #4A1060; border: 1px solid rgba(80,20,80,0.25); }
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px 20px;
+  min-height: 44px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: var(--fs-body);
+  cursor: pointer;
+  border: none;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+.btn-primary {
+  background: var(--clr-primary);
+  color: #FFF;
+  box-shadow: 0 2px 8px rgba(139,26,26,0.30);
+}
+.btn-primary:hover { background: var(--clr-primary-soft); box-shadow: 0 4px 16px rgba(139,26,26,0.35); transform: translateY(-1px); }
+.btn-outline {
+  background: transparent;
+  color: var(--clr-primary);
+  border: 2px solid var(--clr-primary);
+}
+.btn-outline:hover { background: rgba(139,26,26,0.06); }
+.btn-ghost { background: var(--clr-bg2); color: var(--clr-text2); border: 1px solid var(--clr-border); }
+.btn-ghost:hover { background: var(--clr-border); }
+.btn-sm { padding: 6px 14px; min-height: 36px; font-size: var(--fs-caption); }
+.btn-icon { padding: 10px; min-width: 44px; border-radius: var(--radius-sm); }
+
+/* ============================================================
+   INPUTS & SELECTS
+   ============================================================ */
+.input-wrap { position: relative; }
+.input {
+  width: 100%;
+  padding: 11px var(--sp-2);
+  min-height: 44px;
+  background: var(--clr-surface);
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  color: var(--clr-text);
+  transition: var(--transition);
+  appearance: none;
+}
+.input:focus { border-color: var(--clr-primary); box-shadow: 0 0 0 3px var(--clr-glow); outline: none; }
+.input::placeholder { color: var(--clr-text3); }
+
+.select-wrap {
+  position: relative;
+}
+.select-wrap::after {
+  content: '';
+  position: absolute;
+  right: 14px; top: 50%;
+  transform: translateY(-50%);
+  width: 0; height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid var(--clr-text3);
+  pointer-events: none;
+}
+.select {
+  width: 100%;
+  padding: 11px 36px 11px var(--sp-2);
+  min-height: 44px;
+  background: var(--clr-surface);
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  color: var(--clr-text);
+  appearance: none;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.select:focus { border-color: var(--clr-primary); box-shadow: 0 0 0 3px var(--clr-glow); outline: none; }
+
+/* ============================================================
+   PROGRESS BARS
+   ============================================================ */
+.progress-bar-track {
+  height: 8px;
+  background: var(--clr-bg2);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--clr-primary), var(--clr-gold));
+  border-radius: 99px;
+}
+
+/* ============================================================
+   GRID LAYOUTS
+   ============================================================ */
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--sp-2); }
+.grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--sp-2); }
+.grid-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-2); }
+@media(min-width: 600px) { .grid-stats { grid-template-columns: repeat(4, 1fr); } }
+
+/* Log row layout */
+
+/* ============================================================
+   PAGE HEADER
+   ============================================================ */
+.page-header {
+  margin-bottom: var(--sp-3);
+}
+.page-header h1 {
+  font-family: var(--ff-head);
+  font-size: var(--fs-h1);
+  color: var(--clr-text);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.page-header p {
+  color: var(--clr-text3);
+  font-size: var(--fs-caption);
+  margin-top: 4px;
+}
+
+/* ============================================================
+   SECTION LABEL
+   ============================================================ */
+.section-label {
+  font-size: var(--fs-caption);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--clr-primary);
+  margin-bottom: var(--sp-2);
+  display: flex; align-items: center; gap: 8px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--clr-border);
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+#toast-container {
+  position: fixed;
+  bottom: calc(var(--nav-h) + 16px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2000;
+  display: flex; flex-direction: column; gap: 8px;
+  align-items: center;
+  pointer-events: none;
+}
+.toast {
+  background: var(--clr-text);
+  color: var(--clr-surface);
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  box-shadow: var(--sh-lg);
+  pointer-events: none;
+  /* animation defined in micro-interactions block below */
+}
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+#modal-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(10,4,4,0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 1500;
+  align-items: flex-end;
+  justify-content: center;
+  padding: var(--sp-2);
+}
+#modal-overlay.open {
+  display: flex;
+}
+#modal-box {
+  background: var(--clr-surface);
+  border-radius: var(--radius-lg) var(--radius-lg) var(--radius) var(--radius);
+  width: 100%; max-width: 640px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: var(--sp-3);
+  box-shadow: var(--sh-lg);
+  animation: slideUp 0.28s cubic-bezier(0.4,0,0.2,1);
+}
+@keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+.modal-handle { width: 40px; height: 4px; background: var(--clr-border); border-radius: 99px; margin: 0 auto var(--sp-2); }
+
+/* ============================================================
+   HOME PAGE
+   ============================================================ */
+.hero-wordmark {
+  font-family: var(--ff-head);
+  font-size: var(--fs-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--clr-text);
+  line-height: 1.1;
+}
+.hero-wordmark span { color: var(--clr-primary); }
+.hero-sub {
+  color: var(--clr-text3);
+  font-size: var(--fs-caption);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.stat-card {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius);
+  padding: var(--sp-2);
+  box-shadow: var(--sh-sm);
+}
+.stat-value {
+  font-family: var(--ff-head);
+  font-size: var(--fs-h1);
+  font-weight: 700;
+  color: var(--clr-primary);
+  line-height: 1;
+}
+.stat-label { font-size: var(--fs-caption); color: var(--clr-text3); margin-top: 4px; font-weight: 500; }
+
+.today-card {
+  background: linear-gradient(135deg, var(--clr-primary) 0%, #5A0F0F 100%);
+  border-radius: var(--radius);
+  padding: var(--sp-3);
+  color: #FFF;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(139,26,26,0.35);
+}
+.today-card::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 160px; height: 160px;
+  background: rgba(201,146,42,0.15);
+  border-radius: 50%;
+}
+.today-card::after {
+  content: '';
+  position: absolute;
+  bottom: -60px; left: -20px;
+  width: 200px; height: 200px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 50%;
+}
+.today-day-badge {
+  display: inline-flex; align-items: center;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 99px;
+  padding: 3px 12px;
+  font-size: var(--fs-caption);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--sp-1);
+  position: relative;
+  z-index: 1;
+}
+.today-title {
+  font-family: var(--ff-head);
+  font-size: var(--fs-h1);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 1;
+}
+.today-desc {
+  font-size: var(--fs-caption);
+  opacity: 0.85;
+  line-height: 1.5;
+  margin-bottom: var(--sp-2);
+  position: relative;
+  z-index: 1;
+}
+.today-meta {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  position: relative; z-index: 1;
+  margin-bottom: var(--sp-1);
+}
+.today-tag {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.20);
+  border-radius: 99px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #FFF;
+}
+
+/* ============================================================
+   PROJECT CARD
+   ============================================================ */
+.project-card {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius);
+  padding: var(--sp-2);
+  box-shadow: var(--sh-card);
+  transition: var(--transition);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.project-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--clr-primary), var(--clr-gold));
+  opacity: 0;
+  transition: opacity 0.22s;
+}
+.project-card:hover { box-shadow: var(--sh-md); transform: translateY(-3px); }
+.project-card:hover::before { opacity: 1; }
+.project-card.done { border-color: rgba(34,120,80,0.30); }
+.project-card.done::before { opacity: 1; background: linear-gradient(90deg, #1E7850, #2EA86A); }
+
+.pc-day { font-size: 11px; font-weight: 700; color: var(--clr-text3); margin-bottom: 6px; letter-spacing: 0.04em; padding-right: 40px; }
+.pc-title { font-family: var(--ff-head); font-size: 1.05rem; font-weight: 700; line-height: 1.3; margin-bottom: 6px; color: var(--clr-text); padding-right: 8px; }
+.pc-desc { font-size: var(--fs-caption); color: var(--clr-text3); line-height: 1.5; margin-bottom: var(--sp-1); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; flex: 1; }
+.pc-footer { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.pc-check {
+  position: absolute; top: var(--sp-1); right: var(--sp-1);
+  width: 32px; height: 32px;
+  min-width: 32px; min-height: 32px;
+  border-radius: 50%;
+  background: var(--clr-bg2);
+  border: 1.5px solid var(--clr-border);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 14px;
+  z-index: 2;
+}
+.project-card.done .pc-check { background: #1E7850; border-color: #1E7850; color: #FFF; }
+
+/* ============================================================
+   SEARCH & FILTERS
+   ============================================================ */
+.filter-bar {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-1);
+  margin-bottom: var(--sp-3);
+}
+@media(min-width: 560px) { .filter-bar { grid-template-columns: 1fr 1fr; } }
+@media(min-width: 780px) { .filter-bar { grid-template-columns: 2fr 1fr 1fr 1fr; } }
+
+/* ============================================================
+   SKILLS SECTION
+   ============================================================ */
+.skill-row {
+  display: grid;
+  grid-template-columns: 110px 1fr 44px;
+  align-items: center;
+  gap: var(--sp-1) var(--sp-2);
+  padding: 10px 0;
+  border-bottom: 1px solid var(--clr-border);
+}
+.skill-row:last-child { border-bottom: none; }
+@media(max-width: 380px) { .skill-row { grid-template-columns: 90px 1fr 38px; } }
+.skill-name { font-size: var(--fs-caption); font-weight: 600; color: var(--clr-text2); }
+.skill-pct { font-size: var(--fs-caption); font-weight: 700; color: var(--clr-primary); text-align: right; }
+
+/* ============================================================
+   CATEGORIES
+   ============================================================ */
+.cat-card {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius);
+  padding: var(--sp-3) var(--sp-2);
+  box-shadow: var(--sh-card);
+  transition: var(--transition);
+  cursor: pointer;
+  text-align: center;
+}
+.cat-card:hover { box-shadow: var(--sh-md); transform: translateY(-2px); }
+.cat-icon { font-size: 2rem; margin-bottom: 8px; }
+.cat-name { font-family: var(--ff-head); font-weight: 700; font-size: 0.95rem; color: var(--clr-text); margin-bottom: 4px; }
+.cat-count { font-size: var(--fs-caption); color: var(--clr-text3); }
+
+/* ============================================================
+   LOG SECTION
+   ============================================================ */
+.log-row {
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
+  gap: var(--sp-1) var(--sp-2);
+  align-items: start;
+  padding: var(--sp-2);
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--sp-1);
+  transition: var(--transition);
+}
+.log-row:hover { box-shadow: var(--sh-sm); }
+.log-day-num {
+  width: 48px; height: 48px;
+  background: var(--clr-primary);
+  color: #FFF;
+  border-radius: var(--radius-sm);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700;
+  line-height: 1.2;
+  flex-shrink: 0;
+}
+.log-info-title { font-weight: 700; font-size: 0.9rem; color: var(--clr-text); }
+.log-info-meta { font-size: var(--fs-caption); color: var(--clr-text3); margin-top: 2px; }
+.log-stars { color: var(--clr-gold); font-size: 0.85rem; }
+
+/* ============================================================
+   SETTINGS
+   ============================================================ */
+.setting-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--sp-2) 0;
+  border-bottom: 1px solid var(--clr-border);
+  min-height: 56px;
+}
+.setting-label { font-weight: 600; color: var(--clr-text2); }
+.setting-sub { font-size: var(--fs-caption); color: var(--clr-text3); margin-top: 2px; }
+
+/* Toggle */
+.toggle {
+  position: relative; width: 52px; height: 28px;
+  min-height: 28px;
+}
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-track {
+  position: absolute; inset: 0;
+  background: var(--clr-border);
+  border-radius: 99px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.toggle input:checked + .toggle-track { background: var(--clr-primary); }
+.toggle-track::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 22px; height: 22px;
+  background: #FFF;
+  border-radius: 50%;
+  transition: transform 0.22s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+.toggle input:checked + .toggle-track::after { transform: translateX(24px); }
+
+/* ============================================================
+   YEAR PROGRESS TRACKER
+   ============================================================ */
+#year-dots {
+  display: flex; flex-wrap: wrap; gap: 3px;
+  padding: var(--sp-2);
+  background: var(--clr-bg2);
+  border-radius: var(--radius-sm);
+  max-width: 100%;
+}
+.yd { width: 8px; height: 8px; border-radius: 50%; background: var(--clr-border); transition: background 0.2s, transform 0.15s; }
+.yd:hover { transform: scale(1.6); z-index: 1; position: relative; }
+.yd:focus-visible { outline: 2px solid var(--clr-gold); outline-offset: 2px; }
+.yd.done { background: var(--clr-primary); }
+.yd.today { background: var(--clr-gold); box-shadow: 0 0 4px var(--clr-gold); }
+
+/* ============================================================
+   DIFF CHART
+   ============================================================ */
+.diff-chart { display: flex; gap: var(--sp-1); align-items: flex-end; height: 90px; padding-bottom: 4px; }
+.diff-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end; min-width: 0; }
+.diff-bar { width: 100%; border-radius: 4px 4px 0 0; min-height: 4px; transition: height 0.6s cubic-bezier(0.4,0,0.2,1); }
+.diff-bar-label { font-size: 10px; color: var(--clr-text3); font-weight: 600; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
+
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
+.empty-state {
+  text-align: center; padding: var(--sp-6) var(--sp-3);
+  color: var(--clr-text3);
+}
+.empty-icon { font-size: 3rem; margin-bottom: var(--sp-2); }
+.empty-title { font-family: var(--ff-head); font-size: var(--fs-h1); margin-bottom: 8px; color: var(--clr-text2); }
+
+/* ============================================================
+   MODAL DETAIL
+   ============================================================ */
+.modal-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-1);
+  margin: var(--sp-2) 0;
+}
+@media(min-width: 400px) {
+  .modal-detail-grid { grid-template-columns: 1fr 1fr; gap: var(--sp-1) var(--sp-2); }
+}
+.modal-field { padding: var(--sp-1); background: var(--clr-bg2); border-radius: var(--radius-sm); }
+.modal-field-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--clr-text3); margin-bottom: 3px; }
+.modal-field-val { font-size: var(--fs-caption); color: var(--clr-text); font-weight: 500; }
+
+/* ============================================================
+   INSTALL HINT
+   ============================================================ */
+.install-card {
+  background: linear-gradient(135deg, #1A0A0A, #2A1414);
+  border-radius: var(--radius);
+  padding: var(--sp-3);
+  color: #FFF;
+  border: 1px solid rgba(201,146,42,0.25);
+}
+
+/* ============================================================
+   UTILITY
+   ============================================================ */
+.flex { display: flex; }
+.flex-center { display: flex; align-items: center; }
+.gap-1 { gap: var(--sp-1); }
+.gap-2 { gap: var(--sp-2); }
+.mt-1 { margin-top: var(--sp-1); }
+.mt-2 { margin-top: var(--sp-2); }
+.mt-3 { margin-top: var(--sp-3); }
+.mb-1 { margin-bottom: var(--sp-1); }
+.mb-2 { margin-bottom: var(--sp-2); }
+.mb-3 { margin-bottom: var(--sp-3); }
+.fw-bold { font-weight: 700; }
+.text-sm { font-size: var(--fs-caption); }
+.text-muted { color: var(--clr-text3); }
+.text-primary { color: var(--clr-primary); }
+.gold { color: var(--clr-gold); }
+.w-full { width: 100%; }
+.hidden { display: none !important; }
+
+/* ============================================================
+   MICRO-INTERACTIONS  (all 22 bugs fixed)
+   ============================================================ */
+
+/* ── 1. RIPPLE — scale(2) correct for size = max(w,h)×2 ── */
+.ripple-host { overflow: hidden; position: relative; }
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  animation: rippleAnim 0.45s cubic-bezier(0.4,0,0.2,1) forwards;
+  background: rgba(255,255,255,0.22);
+  pointer-events: none;
+  z-index: 10;
+  will-change: transform, opacity;
+}
+@keyframes rippleAnim {
+  to { transform: scale(2); opacity: 0; }
+}
+.btn-primary .ripple  { background: rgba(255,255,255,0.28); }
+.btn-ghost .ripple,
+.btn-outline .ripple  { background: rgba(139,26,26,0.10); }
+.nav-item .ripple     { background: rgba(139,26,26,0.07); animation-duration: 0.38s; }
+.pc-check .ripple     { background: rgba(30,120,80,0.18); animation-duration: 0.32s; }
+
+/* ── 2. BUTTON PRESS — no translateY(0) override fight ── */
+.btn:active           { transform: scale(0.96) !important; transition: transform 0.07s !important; }
+.btn-primary:active   { box-shadow: 0 1px 4px rgba(139,26,26,0.18) !important; }
+.btn-primary:hover    { transform: translateY(-1px); } /* keep hover lift */
+
+/* ── 3. CHECKMARK — animate the button itself, no .check-inner wrapper needed ── */
+@keyframes checkPop {
+  0%   { transform: scale(0.4) rotate(-20deg); }
+  55%  { transform: scale(1.28) rotate(6deg);  }
+  78%  { transform: scale(0.92) rotate(-3deg); }
+  100% { transform: scale(1)    rotate(0deg);  }
+}
+@keyframes checkRing {
+  0%   { box-shadow: 0 0 0 0   rgba(30,120,80,0.55); }
+  55%  { box-shadow: 0 0 0 9px rgba(30,120,80,0);    }
+  100% { box-shadow: 0 0 0 0   rgba(30,120,80,0);    }
+}
+.pc-check.just-completed {
+  animation: checkPop  0.4s  cubic-bezier(0.34,1.56,0.64,1) forwards,
+             checkRing 0.52s ease-out forwards;
+}
+
+/* ── 4. STAT COUNTER — use filter:brightness for gold flash, not color in keyframes ── */
+@keyframes statPulse {
+  0%   { transform: scale(1);    filter: brightness(1); }
+  40%  { transform: scale(1.15); filter: brightness(1.6); }
+  100% { transform: scale(1);    filter: brightness(1); }
+}
+.stat-value.updating { animation: statPulse 0.46s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+
+/* ── 5. NAV ICON BOUNCE ── */
+@keyframes navBounce {
+  0%   { transform: translateY(0)    scale(1);    }
+  32%  { transform: translateY(-6px) scale(1.2);  }
+  62%  { transform: translateY(2px)  scale(0.92); }
+  100% { transform: translateY(0)    scale(1);    }
+}
+.nav-icon-wrap.bounce { animation: navBounce 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+
+/* ── 6. SEARCH INPUT FOCUS RING ── */
+@keyframes inputPulse {
+  0%   { box-shadow: 0 0 0 0   var(--clr-glow); }
+  55%  { box-shadow: 0 0 0 6px rgba(139,26,26,0); }
+  100% { box-shadow: 0 0 0 3px var(--clr-glow); }
+}
+.input.typing { animation: inputPulse 0.28s ease forwards; }
+
+/* ── 7. PROGRESS BAR — shimmer only on non-zero bars; GPU-only props ── */
+@keyframes shimmer {
+  from { background-position: 200% center; }
+  to   { background-position: -200% center; }
+}
+.progress-bar-fill {
+  background-size: 300% auto;
+  background-image: linear-gradient(90deg,
+    var(--clr-primary) 0%,
+    var(--clr-gold-light) 45%,
+    var(--clr-gold) 50%,
+    var(--clr-gold-light) 55%,
+    var(--clr-primary) 100%
+  );
+  will-change: background-position;
+}
+/* Only shimmer bars with actual width (not skeleton-zero) */
+.progress-bar-fill[style*="width: 0"],
+.progress-bar-fill[style*="width:0"] { animation: none; background-image: none; background: var(--clr-border); }
+.progress-bar-fill:not([style*="width: 0"]):not([style*="width:0"]) { animation: shimmer 2.8s linear infinite; }
+
+/* ── 8. TODAY CARD SWEEP — properly layered above ::before/::after, clipped ── */
+@keyframes todaySweep {
+  0%   { transform: translateX(-180%) skewX(-12deg); opacity: 0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { transform: translateX(280%)  skewX(-12deg); opacity: 0; }
+}
+.today-card .sweep {
+  position: absolute;
+  inset: 0;
+  width: 35%;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.09) 50%, transparent 100%);
+  animation: todaySweep 4s ease-in-out infinite;
+  animation-delay: 1.2s;
+  pointer-events: none;
+  z-index: 2; /* above ::before (z auto) and ::after (z auto), below content (z:1 siblings removed) */
+}
+/* Remove z-index from today-card children so sweep layering works */
+.today-day-badge, .today-title, .today-desc, .today-meta { position: relative; z-index: 3; }
+
+/* ── 9. MODAL TOP ACCENT — use ::before not ::after (overflow-y clips ::after) ── */
+#modal-box { position: relative; }
+#modal-box::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: linear-gradient(90deg, var(--clr-primary) 0%, var(--clr-gold) 50%, var(--clr-primary) 100%);
+  background-size: 200% auto;
+  animation: modalAccentSlide 2.4s ease-in-out infinite;
+  z-index: 1;
+}
+@keyframes modalAccentSlide {
+  0%   { background-position: 0%   center; }
+  50%  { background-position: 100% center; }
+  100% { background-position: 0%   center; }
+}
+
+/* ── 10. CAT CARD ICON FLOAT ── */
+@keyframes iconFloat {
+  0%, 100% { transform: translateY(0)   scale(1);    }
+  50%       { transform: translateY(-5px) scale(1.1); }
+}
+.cat-card:hover .cat-icon { animation: iconFloat 0.55s ease-in-out; }
+
+/* ── 11. SKILL BAR REVEAL — scaleX from transform-origin:left avoids !important hack ── */
+.progress-bar-fill {
+  transform-origin: left center;
+}
+.skill-row .progress-bar-fill {
+  transform: scaleX(0);
+  transition: transform 0s; /* hold until .revealed */
+}
+.skill-row.revealed .progress-bar-fill {
+  transform: scaleX(1);
+  transition: transform 0.72s cubic-bezier(0.22,1,0.36,1) !important;
+}
+
+/* ── 12. TOAST — single animation declaration, replaces original toastIn/toastOut ── */
+@keyframes toastEnter {
+  0%   { opacity: 0; transform: translateY(14px) scale(0.9);  }
+  55%  {             transform: translateY(-3px)  scale(1.02); }
+  80%  {             transform: translateY(1px)   scale(0.99); }
+  100% { opacity: 1; transform: translateY(0)     scale(1);    }
+}
+@keyframes toastLeave {
+  to   { opacity: 0; transform: translateY(-10px) scale(0.94); }
+}
+.toast { animation: toastEnter 0.42s cubic-bezier(0.34,1.56,0.64,1) both,
+                    toastLeave 0.26s ease-in 2.5s forwards; }
+
+/* ── 13. CONFETTI PIECES ── */
+.confetti-piece {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  animation: confettiFall var(--dur,1.1s) var(--delay,0s) cubic-bezier(0.22,1,0.36,1) forwards;
+  will-change: transform, opacity;
+}
+@keyframes confettiFall {
+  0%   { transform: translate(0,0) rotate(0deg) scale(1); opacity: 1; }
+  70%  { opacity: 1; }
+  100% { transform: translate(var(--tx,0px),var(--ty,100px)) rotate(var(--rot,360deg)) scale(0.3); opacity: 0; }
+}
+
+/* ── 14. FILTER SELECT active tint ── */
+.select.has-value {
+  border-color: var(--clr-primary);
+  background: rgba(139,26,26,0.03);
+  color: var(--clr-primary);
+  font-weight: 600;
+}
+
+/* ── 15. LOG ROW SLIDE-IN — JS assigns per-row delays so all rows stagger properly ── */
+@keyframes logRowIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: none; }
+}
+/* delay set inline by JS; .log-row gets this base animation */
+.log-row { animation: logRowIn 0.28s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* ── 16. YEAR DOT CELEBRATE ── */
+@keyframes dotCelebrate {
+  0%   { transform: scale(1);   }
+  30%  { transform: scale(2.4); box-shadow: 0 0 8px var(--clr-gold); }
+  65%  { transform: scale(1.5); }
+  100% { transform: scale(1);   box-shadow: none; }
+}
+.yd.celebrating { animation: dotCelebrate 0.58s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+
+/* ── 17. HERO TEXT — transform only; data-attr prevents re-animation on renderHome ── */
+@keyframes heroIn {
+  from { opacity: 0; transform: translateY(-10px) scale(0.97); }
+  to   { opacity: 1; transform: none; }
+}
+.hero-wordmark:not([data-entered]) { animation: heroIn 0.48s cubic-bezier(0.22,1,0.36,1) both 0.08s; }
+.hero-sub:not([data-entered])      { animation: heroIn 0.48s cubic-bezier(0.22,1,0.36,1) both 0.18s; }
+.hero-wordmark[data-entered],
+.hero-sub[data-entered]            { animation: none; }
+
+/* ── 18. STAT CARD ENTRANCE — data-attr guards re-animation cleanly, no !important ── */
+@keyframes statCardIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.95); }
+  to   { opacity: 1; transform: none; }
+}
+.stat-card[data-entered="1"] { animation: none; }
+.stat-card:not([data-entered]):nth-child(1) { animation: statCardIn 0.36s cubic-bezier(0.22,1,0.36,1) both 0.12s; }
+.stat-card:not([data-entered]):nth-child(2) { animation: statCardIn 0.36s cubic-bezier(0.22,1,0.36,1) both 0.20s; }
+.stat-card:not([data-entered]):nth-child(3) { animation: statCardIn 0.36s cubic-bezier(0.22,1,0.36,1) both 0.28s; }
+.stat-card:not([data-entered]):nth-child(4) { animation: statCardIn 0.36s cubic-bezier(0.22,1,0.36,1) both 0.36s; }
+
+/* ── 19. TOGGLE SPRING ── */
+.toggle-track::after {
+  transition: transform 0.26s cubic-bezier(0.34,1.56,0.64,1),
+              box-shadow 0.18s ease;
+}
+.toggle input:checked + .toggle-track::after { box-shadow: 0 2px 6px rgba(139,26,26,0.28); }
+
+/* ── 20. PC-CHECK HOVER WIGGLE — valid selector ── */
+@keyframes checkWiggle {
+  0%, 100% { transform: rotate(0deg)   scale(1);   }
+  25%       { transform: rotate(-14deg) scale(1.1); }
+  75%       { transform: rotate(12deg)  scale(1.1); }
+}
+.project-card:not(.done) .pc-check:hover { animation: checkWiggle 0.36s ease; }
+
+/* ── 21. PAGE TRANSITIONS — applied to INCOMING page ── */
+@keyframes pageEnterRight { from { opacity:0; transform:translateX( 18px); } to { opacity:1; transform:none; } }
+@keyframes pageEnterLeft  { from { opacity:0; transform:translateX(-18px); } to { opacity:1; transform:none; } }
+.page.slide-from-right { animation: pageEnterRight 0.28s cubic-bezier(0.22,1,0.36,1) both; }
+.page.slide-from-left  { animation: pageEnterLeft  0.28s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* ── 22. SCROLL REVEAL — opacity:0 preserves a11y tree (visibility:hidden removes from tree) ── */
+@keyframes revealUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+.observe-enter         { opacity: 0; }
+.observe-enter.visible { animation: revealUp 0.42s cubic-bezier(0.22,1,0.36,1) forwards; }
+
+/* ── 23. SEARCH CLEAR BUTTON ── */
+.input-wrap .clear-btn {
+  position: absolute;
+  right: 10px; top: 50%;
+  transform: translateY(-50%) scale(0);
+  background: var(--clr-border);
+  border: none; border-radius: 50%;
+  width: 22px; height: 22px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 11px; line-height: 1;
+  color: var(--clr-text2);
+  transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1), background 0.14s;
+}
+.input-wrap .clear-btn.visible  { transform: translateY(-50%) scale(1); }
+.input-wrap .clear-btn:hover    { background: var(--clr-primary); color: #fff; }
+.input-wrap .input              { padding-right: 36px; }
+
+/* ── 24. DARK MODE — transition on * catches all surfaces ── */
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition: background-color 0.35s ease, border-color 0.35s ease, color 0.35s ease,
+              box-shadow 0.35s ease !important;
+}
+
+/* ── 25. SCROLLBAR ── */
+::-webkit-scrollbar-thumb:hover { background: var(--clr-primary-soft); }
+</style>
+</head>
+<body>
+
+<!-- TOAST CONTAINER -->
+<div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+<!-- MODAL OVERLAY -->
+<div id="modal-overlay" role="dialog" aria-modal="true" aria-label="Project details">
+  <div id="modal-box">
+    <div class="modal-handle"></div>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAGE: HOME
+     ============================================================ -->
+<section id="page-home" class="page active" role="main" aria-label="Home Dashboard">
+<div class="container">
+
+  <!-- Hero -->
+  <div class="mb-3">
+    <p class="hero-sub">2026 · 365 Days Challenge</p>
+    <h1 class="hero-wordmark"><span>ML</span> Mini Projects</h1>
+  </div>
+
+  <!-- Stats -->
+  <div class="grid-stats mb-3">
+    <div class="stat-card">
+      <div class="stat-value" id="stat-done">0</div>
+      <div class="stat-label">Completed</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-streak">0</div>
+      <div class="stat-label">Day Streak</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-pct">0%</div>
+      <div class="stat-label">Progress</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-remaining">365</div>
+      <div class="stat-label">Remaining</div>
+    </div>
+  </div>
+
+  <!-- Year Progress -->
+  <div class="card mb-3">
+    <div class="section-label">Year Progress</div>
+    <div id="year-dots" aria-label="365 day progress dots"></div>
+    <div class="flex-center gap-2 mt-2" style="justify-content:space-between;">
+      <div style="display:flex;gap:12px;font-size:var(--fs-caption);">
+        <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--clr-primary);margin-right:4px;vertical-align:middle;"></span>Done</span>
+        <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--clr-gold);margin-right:4px;vertical-align:middle;"></span>Today</span>
+      </div>
+      <span class="text-sm text-muted" id="year-progress-label">Day 1 of 365</span>
+    </div>
+  </div>
+
+  <!-- Today's Project -->
+  <div class="section-label">Today's Project</div>
+  <div id="today-spotlight" class="mb-3"></div>
+
+  <!-- Difficulty Distribution -->
+  <div class="card mb-3">
+    <div class="section-label">Difficulty Distribution</div>
+    <div class="diff-chart" id="diff-chart" role="img" aria-label="Difficulty distribution chart"></div>
+  </div>
+
+</div>
+</section>
+
+<!-- ============================================================
+     PAGE: PROJECTS
+     ============================================================ -->
+<section id="page-projects" class="page" role="region" aria-label="All Projects">
+<div class="container">
+  <div class="page-header">
+    <h1>All Projects</h1>
+    <p id="project-count-label" aria-live="polite" aria-atomic="true">365 projects · 0 completed</p>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar mb-3">
+    <div class="input-wrap">
+      <input class="input" type="search" id="search-input" placeholder="Search projects…" aria-label="Search projects" autocomplete="off">
+      <button class="clear-btn" id="search-clear" aria-label="Clear search" tabindex="-1">✕</button>
+    </div>
+    <div class="select-wrap">
+      <select class="select" id="filter-diff" aria-label="Filter by difficulty">
+        <option value="">All Levels</option>
+        <option value="Beginner">Beginner</option>
+        <option value="Intermediate">Intermediate</option>
+        <option value="Advanced">Advanced</option>
+        <option value="Expert">Expert</option>
+      </select>
+    </div>
+    <div class="select-wrap">
+      <select class="select" id="filter-cat" aria-label="Filter by category">
+        <option value="">All Categories</option>
+      </select>
+    </div>
+    <div class="select-wrap">
+      <select class="select" id="sort-by" aria-label="Sort projects">
+        <option value="day">Day #</option>
+        <option value="diff">Difficulty</option>
+        <option value="time">Time</option>
+      </select>
+    </div>
+  </div>
+
+  <div id="projects-grid" class="grid-2"></div>
+  <div id="projects-empty" class="empty-state hidden">
+    <div class="empty-icon">🔍</div>
+    <div class="empty-title">No projects found</div>
+    <p>Try adjusting your filters</p>
+  </div>
+</div>
+</section>
+
+<!-- ============================================================
+     PAGE: CATEGORIES
+     ============================================================ -->
+<section id="page-categories" class="page" role="region" aria-label="Categories">
+<div class="container">
+  <div class="page-header">
+    <h1>Categories</h1>
+    <p>Explore ML domains</p>
+  </div>
+  <div id="categories-grid" class="grid-3"></div>
+</div>
+</section>
+
+<!-- ============================================================
+     PAGE: SKILLS
+     ============================================================ -->
+<section id="page-skills" class="page" role="region" aria-label="Skills Progression">
+<div class="container">
+  <div class="page-header">
+    <h1>Skills Progression</h1>
+    <p>Track your learning journey</p>
+  </div>
+  <div class="card mb-3" style="overflow:hidden;">
+    <div class="section-label">Core ML Stack</div>
+    <div id="skills-list"></div>
+  </div>
+</div>
+</section>
+
+<!-- ============================================================
+     PAGE: LOG
+     ============================================================ -->
+<section id="page-log" class="page" role="region" aria-label="Activity Log">
+<div class="container">
+  <div class="flex-center gap-2 mb-3" style="justify-content:space-between;flex-wrap:wrap;">
+    <div class="page-header" style="margin-bottom:0;">
+      <h1>Activity Log</h1>
+      <p id="log-count-label" aria-live="polite" aria-atomic="true">0 projects logged</p>
+    </div>
+    <button class="btn btn-ghost btn-sm" id="export-json-btn" aria-label="Export log as JSON">⬇ Export JSON</button>
+  </div>
+  <div id="log-list"></div>
+  <div id="log-empty" class="empty-state hidden" aria-live="polite">
+    <div class="empty-icon">📋</div>
+    <div class="empty-title">No activity yet</div>
+    <p>Complete a project to see it here</p>
+  </div>
+</div>
+</section>
+
+<!-- ============================================================
+     PAGE: SETTINGS
+     ============================================================ -->
+<section id="page-settings" class="page" role="region" aria-label="Settings">
+<div class="container">
+  <div class="page-header">
+    <h1>Settings</h1>
+  </div>
+
+  <div class="card mb-3">
+    <div class="setting-row">
+      <div>
+        <div class="setting-label">Dark Mode</div>
+        <div class="setting-sub">Toggle dark theme</div>
+      </div>
+      <label class="toggle" aria-label="Toggle dark mode">
+        <input type="checkbox" id="dark-toggle">
+        <span class="toggle-track"></span>
+      </label>
+    </div>
+    <div class="setting-row">
+      <div>
+        <div class="setting-label">Export Data</div>
+        <div class="setting-sub">Download all progress as JSON</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" id="export-all-btn" aria-label="Export all data">Export</button>
+    </div>
+    <div class="setting-row" style="border-bottom:none;">
+      <div>
+        <div class="setting-label" style="color:#C0392B;">Reset Progress</div>
+        <div class="setting-sub">Clear all completed data</div>
+      </div>
+      <button class="btn btn-sm" style="background:#C0392B;color:#FFF;" id="reset-btn" aria-label="Reset progress">Reset</button>
+    </div>
+  </div>
+
+  <div class="install-card mb-3">
+    <div style="font-size:var(--fs-caption);font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#E8B84B;margin-bottom:var(--sp-2);">📲 Install App</div>
+    <p class="text-sm" style="color:rgba(255,255,255,0.8);margin-bottom:var(--sp-2);line-height:1.6;">
+      Add ML365 to your home screen for the best experience — offline access, push-ready, fullscreen.
+    </p>
+    <p class="text-sm" style="color:rgba(255,255,255,0.6);">
+      <strong style="color:var(--clr-gold-light);">iOS Safari:</strong> Tap Share → "Add to Home Screen"<br>
+      <strong style="color:var(--clr-gold-light);">Android Chrome:</strong> Tap ⋮ → "Add to Home Screen"<br>
+      <strong style="color:var(--clr-gold-light);">Desktop:</strong> Look for install icon in address bar
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="section-label">About</div>
+    <p class="text-sm text-muted" style="line-height:1.7;">
+      <strong class="text-primary">ML365</strong> — 2026 Edition. 365 curated machine learning mini projects designed to take you from beginner to expert over one year. Built as a PWA for offline-first learning.
+    </p>
+    <p class="text-sm text-muted mt-1">v1.0.0 · Pure HTML/CSS/JS · No dependencies</p>
+  </div>
+
+</div>
+</section>
+
+<!-- ============================================================
+     BOTTOM NAVIGATION
+     ============================================================ -->
+<nav id="bottom-nav" role="navigation" aria-label="Main navigation">
+  <button class="nav-item active" data-page="home" aria-label="Home" aria-current="page">
+    <div class="nav-icon-wrap">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/>
+      </svg>
+    </div>
+    <span class="nav-label">Home</span>
+  </button>
+  <button class="nav-item" data-page="projects" aria-label="Projects">
+    <div class="nav-icon-wrap">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+      </svg>
+    </div>
+    <span class="nav-label">Projects</span>
+  </button>
+  <button class="nav-item" data-page="categories" aria-label="Categories">
+    <div class="nav-icon-wrap">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/>
+        <path d="M22.46 12H22M2 12H1.54M12 2v.54M12 22v-.54"/>
+      </svg>
+    </div>
+    <span class="nav-label">Categories</span>
+  </button>
+  <button class="nav-item" data-page="skills" aria-label="Skills">
+    <div class="nav-icon-wrap">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+      </svg>
+    </div>
+    <span class="nav-label">Skills</span>
+  </button>
+  <button class="nav-item" data-page="log" aria-label="Activity Log">
+    <div class="nav-icon-wrap">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+      </svg>
+    </div>
+    <span class="nav-label">Log</span>
+  </button>
+  <button class="nav-item" data-page="settings" aria-label="Settings">
+    <div class="nav-icon-wrap">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
+      </svg>
+    </div>
+    <span class="nav-label">Settings</span>
+  </button>
+</nav>
+
+<script>
+/* ============================================================
+   DATA: 365 ML MINI PROJECTS
+   ============================================================ */
+const PROJECTS = (function() {
+  const CAT_LIST = ['Computer Vision','NLP','Tabular ML','Reinforcement Learning','Time Series','MLOps','AI Agents','Edge AI','Generative AI','Data Engineering'];
+  const data = [
+    // ── DAYS 1-30: BEGINNER FOUNDATIONS ──────────────────────
+    {t:"MNIST Digit Classifier",d:"Train a classic handwritten digit classifier using a simple CNN. Understand convolution layers, max-pooling, and softmax output.",tools:"Python, TensorFlow, Matplotlib",skills:"Python, NumPy, TensorFlow",diff:"Beginner",cat:"Computer Vision",time:"2h",out:"Trained model + accuracy chart",use:"Optical character recognition systems",stretch:"Deploy as a Flask API"},
+    {t:"Sentiment Analysis on Tweets",d:"Build a logistic regression model to classify tweet sentiment as positive, negative, or neutral using TF-IDF features.",tools:"Python, Scikit-learn, NLTK",skills:"Python, Pandas, Scikit-learn",diff:"Beginner",cat:"NLP",time:"3h",out:"Sentiment classifier + confusion matrix",use:"Brand monitoring dashboards",stretch:"Add VADER lexicon comparison"},
+    {t:"House Price Predictor",d:"Predict house prices using linear regression on the Ames Housing dataset with feature engineering and cross-validation.",tools:"Python, Pandas, Scikit-learn",skills:"Python, Pandas, Feature Engineering",diff:"Beginner",cat:"Tabular ML",time:"3h",out:"Regression model with RMSE report",use:"Real estate valuation tools",stretch:"Try Ridge and Lasso regression"},
+    {t:"Iris Flower Classification",d:"Implement k-nearest neighbors and decision tree classifiers on the Iris dataset. Visualize decision boundaries.",tools:"Python, Scikit-learn, Matplotlib",skills:"Python, Scikit-learn",diff:"Beginner",cat:"Tabular ML",time:"2h",out:"Comparison of two classifiers",use:"Species identification apps",stretch:"Add Random Forest comparison"},
+    {t:"Stock Price Trend Visualizer",d:"Fetch historical stock data and visualize trends, moving averages, and Bollinger Bands using Matplotlib.",tools:"Python, yfinance, Pandas, Matplotlib",skills:"Python, Pandas, Time Series",diff:"Beginner",cat:"Time Series",time:"2h",out:"Interactive price chart",use:"Personal finance dashboards",stretch:"Add RSI indicator"},
+    {t:"Spam Email Detector",d:"Build a Naive Bayes classifier to detect spam emails using the SpamAssassin dataset and bag-of-words features.",tools:"Python, Scikit-learn, NLTK",skills:"Python, NLP, Scikit-learn",diff:"Beginner",cat:"NLP",time:"2.5h",out:"Classifier with precision/recall report",use:"Email filtering systems",stretch:"Compare with SVM classifier"},
+    {t:"Cat vs Dog Image Classifier",d:"Fine-tune MobileNetV2 on the Cats vs Dogs dataset using transfer learning. Achieve >95% accuracy.",tools:"Python, TensorFlow, Keras",skills:"Python, TensorFlow, Feature Engineering",diff:"Beginner",cat:"Computer Vision",time:"3h",out:"Binary image classifier",use:"Pet identification apps",stretch:"Add Grad-CAM visualization"},
+    {t:"Customer Churn Predictor",d:"Predict telecom customer churn using decision trees and feature importance analysis on the Telco dataset.",tools:"Python, Pandas, Scikit-learn",skills:"Python, Pandas, Scikit-learn",diff:"Beginner",cat:"Tabular ML",time:"3h",out:"Churn model + feature importance chart",use:"CRM retention systems",stretch:"Implement SMOTE for class imbalance"},
+    {t:"Data Pipeline with Pandas",d:"Build an ETL pipeline that cleans, transforms, and aggregates a messy CSV dataset. Handle missing values and outliers.",tools:"Python, Pandas, NumPy",skills:"Python, Pandas, NumPy",diff:"Beginner",cat:"Data Engineering",time:"2h",out:"Clean dataset + pipeline script",use:"Data preprocessing workflows",stretch:"Schedule with cron"},
+    {t:"Word Cloud Generator",d:"Generate frequency-weighted word clouds from any text corpus with custom stopwords and color palettes.",tools:"Python, WordCloud, NLTK, Matplotlib",skills:"Python, NLP",diff:"Beginner",cat:"NLP",time:"1.5h",out:"Visual word cloud image",use:"Content analytics tools",stretch:"Add sentiment coloring"},
+    {t:"Linear Regression from Scratch",d:"Implement gradient descent optimization for linear regression without using Scikit-learn. Visualize cost convergence.",tools:"Python, NumPy, Matplotlib",skills:"Python, NumPy",diff:"Beginner",cat:"Tabular ML",time:"3h",out:"Custom regression implementation",use:"Algorithm education tools",stretch:"Add regularization term"},
+    {t:"Time Series Forecasting with ARIMA",d:"Forecast monthly airline passenger numbers using ARIMA. Use AIC criterion to select optimal p,d,q parameters.",tools:"Python, statsmodels, Pandas",skills:"Python, Pandas, Time Series",diff:"Beginner",cat:"Time Series",time:"3h",out:"12-month forecast with confidence intervals",use:"Demand planning systems",stretch:"Compare with Holt-Winters"},
+    {t:"Image Augmentation Pipeline",d:"Build a robust data augmentation pipeline using random flips, crops, brightness, and rotation for training CNNs.",tools:"Python, TensorFlow, Albumentations",skills:"Python, TensorFlow, Feature Engineering",diff:"Beginner",cat:"Computer Vision",time:"2h",out:"Augmented dataset samples",use:"ML training data generation",stretch:"Benchmark augmentation strategies"},
+    {t:"Named Entity Recognition",d:"Extract persons, organizations, and locations from news articles using spaCy's pre-trained NER pipeline.",tools:"Python, spaCy",skills:"Python, NLP",diff:"Beginner",cat:"NLP",time:"2h",out:"Annotated text with entity spans",use:"News aggregation and analysis",stretch:"Fine-tune on custom entities"},
+    {t:"K-Means Customer Segmentation",d:"Segment retail customers using K-Means clustering on RFM (Recency, Frequency, Monetary) features.",tools:"Python, Scikit-learn, Pandas, Seaborn",skills:"Python, Pandas, Feature Engineering",diff:"Beginner",cat:"Tabular ML",time:"3h",out:"Customer segment visualization",use:"Marketing personalization",stretch:"Compare with DBSCAN"},
+    {t:"Face Detection with OpenCV",d:"Implement real-time face detection using Haar Cascades and DNN-based models in OpenCV.",tools:"Python, OpenCV",skills:"Python, Computer Vision",diff:"Beginner",cat:"Computer Vision",time:"2h",out:"Video/image face bounding box demo",use:"Security surveillance systems",stretch:"Add emotion detection"},
+    {t:"Temperature Anomaly Detector",d:"Detect anomalies in IoT temperature sensor data using Z-score and IQR methods. Visualize anomaly windows.",tools:"Python, Pandas, NumPy, Matplotlib",skills:"Python, Pandas, Time Series",diff:"Beginner",cat:"Time Series",time:"2.5h",out:"Anomaly detection chart",use:"Industrial sensor monitoring",stretch:"Add rolling window method"},
+    {t:"Text Summarizer with NLTK",d:"Build an extractive text summarizer that scores sentences by word frequency and extracts key sentences.",tools:"Python, NLTK",skills:"Python, NLP",diff:"Beginner",cat:"NLP",time:"2h",out:"Summarization function + demo",use:"Document processing workflows",stretch:"Compare with LSA method"},
+    {t:"Titanic Survival Predictor",d:"Predict Titanic passenger survival using Random Forest with feature engineering (family size, title extraction).",tools:"Python, Pandas, Scikit-learn",skills:"Python, Pandas, Feature Engineering",diff:"Beginner",cat:"Tabular ML",time:"3h",out:"Classification model with AUC-ROC",use:"Binary classification showcase",stretch:"Hyperparameter tune with GridSearch"},
+    {t:"Simple Q&A Chatbot with Rules",d:"Build a rule-based FAQ chatbot using pattern matching and response templates for a product support use case.",tools:"Python, re, Flask",skills:"Python",diff:"Beginner",cat:"AI Agents",time:"2h",out:"Working chatbot with 30+ patterns",use:"Customer support automation",stretch:"Add intent classification"},
+    {t:"Color Palette Extractor",d:"Extract dominant colors from images using K-Means clustering. Output hex codes and percentage distribution.",tools:"Python, Pillow, Scikit-learn, Matplotlib",skills:"Python, NumPy, Scikit-learn",diff:"Beginner",cat:"Computer Vision",time:"2h",out:"Color palette JSON + visual chart",use:"Design asset tools",stretch:"Build web UI with Flask"},
+    {t:"Loan Default Risk Scorer",d:"Build a binary classifier for loan default prediction using LightGBM with SHAP value explanations.",tools:"Python, LightGBM, SHAP, Pandas",skills:"Python, Pandas, Feature Engineering",diff:"Beginner",cat:"Tabular ML",time:"3h",out:"Risk score model + SHAP waterfall plot",use:"Fintech credit scoring",stretch:"Add monotonic constraints"},
+    {t:"Weather Pattern Classifier",d:"Classify weather conditions (sunny, rainy, cloudy, snowy) from climate feature vectors using SVM.",tools:"Python, Scikit-learn, Pandas",skills:"Python, Scikit-learn",diff:"Beginner",cat:"Tabular ML",time:"2h",out:"Multi-class weather classifier",use:"Smart home automation",stretch:"Add geographic feature clusters"},
+    {t:"PDF Text Extractor Pipeline",d:"Build a pipeline to extract, clean, and structure text from PDF documents for downstream NLP tasks.",tools:"Python, pdfplumber, NLTK, Pandas",skills:"Python, NLP, Data Engineering",diff:"Beginner",cat:"Data Engineering",time:"2.5h",out:"Structured text dataset from PDFs",use:"Document digitization workflows",stretch:"Add table extraction"},
+    {t:"Recommendation Engine (Collaborative)",d:"Build user-based collaborative filtering for movie recommendations using the MovieLens 100K dataset.",tools:"Python, Pandas, Scikit-learn, Surprise",skills:"Python, Pandas, Scikit-learn",diff:"Beginner",cat:"Tabular ML",time:"3h",out:"Top-N recommendation engine",use:"Streaming platform recommendations",stretch:"Implement matrix factorization"},
+    {t:"Real-Time Object Counter",d:"Count objects in images using YOLO bounding boxes. Visualize counts by category with confidence thresholds.",tools:"Python, YOLOv8, OpenCV",skills:"Python, Computer Vision",diff:"Beginner",cat:"Computer Vision",time:"2h",out:"Object counting demo script",use:"Retail inventory monitoring",stretch:"Add real-time video stream"},
+    {t:"Social Network Graph Analyzer",d:"Build a social network graph and compute centrality measures (betweenness, PageRank) using NetworkX.",tools:"Python, NetworkX, Matplotlib",skills:"Python, Data Engineering",diff:"Beginner",cat:"Data Engineering",time:"2.5h",out:"Graph visualization + centrality scores",use:"Influence mapping tools",stretch:"Add community detection"},
+    {t:"Fake News Detector (Baseline)",d:"Train a TF-IDF + Logistic Regression baseline for fake news classification on the LIAR dataset.",tools:"Python, Scikit-learn, NLTK",skills:"Python, NLP, Scikit-learn",diff:"Beginner",cat:"NLP",time:"3h",out:"Binary fake news classifier",use:"Content moderation pipelines",stretch:"Add headline-only model"},
+    {t:"A/B Test Analyzer",d:"Build a statistical A/B test analysis tool with t-test, Chi-square, and effect size (Cohen's d) calculations.",tools:"Python, SciPy, Pandas, Matplotlib",skills:"Python, Pandas",diff:"Beginner",cat:"Data Engineering",time:"2h",out:"A/B test report generator",use:"Product analytics platforms",stretch:"Add Bayesian alternative"},
+    {t:"Hand Gesture Recognizer",d:"Recognize 5 static hand gestures using MediaPipe landmark extraction and a simple MLP classifier.",tools:"Python, MediaPipe, Scikit-learn, OpenCV",skills:"Python, Computer Vision",diff:"Beginner",cat:"Computer Vision",time:"3h",out:"Gesture recognition demo",use:"Accessibility input devices",stretch:"Extend to dynamic gestures"},
+
+    // ── DAYS 31-60: INTERMEDIATE LEVEL ──────────────────────
+    {t:"BERT Sentiment Fine-tuning",d:"Fine-tune a pre-trained BERT model on the SST-2 sentiment dataset using HuggingFace Transformers. Track training with W&B.",tools:"Python, HuggingFace, PyTorch, W&B",skills:"Python, PyTorch, NLP",diff:"Intermediate",cat:"NLP",time:"4h",out:"Fine-tuned BERT checkpoint",use:"Enterprise feedback analysis",stretch:"Distill to DistilBERT"},
+    {t:"Multi-class Image Segmentation",d:"Implement semantic segmentation on Pascal VOC using a U-Net architecture. Compute mean IoU per class.",tools:"Python, PyTorch, torchvision",skills:"Python, PyTorch, Computer Vision",diff:"Intermediate",cat:"Computer Vision",time:"5h",out:"Segmentation masks + mIoU report",use:"Medical image analysis",stretch:"Try DeepLab v3+"},
+    {t:"Time Series with LSTM",d:"Forecast energy consumption 24 hours ahead using a stacked LSTM network with attention mechanism.",tools:"Python, TensorFlow, Pandas",skills:"Python, TensorFlow, Time Series",diff:"Intermediate",cat:"Time Series",time:"4h",out:"24h forecast model",use:"Smart grid optimization",stretch:"Compare with TCN"},
+    {t:"Automated Feature Engineering",d:"Use Featuretools to automatically generate 200+ features from relational e-commerce transaction data.",tools:"Python, Featuretools, Pandas",skills:"Python, Pandas, Feature Engineering",diff:"Intermediate",cat:"Data Engineering",time:"3h",out:"Auto-generated feature matrix",use:"AutoML data preparation",stretch:"Combine with target encoding"},
+    {t:"RAG Q&A System",d:"Build a Retrieval-Augmented Generation system for PDF documents using FAISS vector store and Ollama embeddings.",tools:"Python, LangChain, FAISS, Ollama",skills:"Python, NLP, Prompt Engineering",diff:"Intermediate",cat:"AI Agents",time:"5h",out:"Document Q&A chatbot",use:"Enterprise knowledge bases",stretch:"Add streaming responses"},
+    {t:"XGBoost Credit Scoring",d:"Build a production-grade credit scoring model with XGBoost, calibrated probabilities, and Platt scaling.",tools:"Python, XGBoost, Scikit-learn",skills:"Python, Pandas, Feature Engineering",diff:"Intermediate",cat:"Tabular ML",time:"4h",out:"Calibrated score model + scorecard",use:"Banking risk systems",stretch:"Add fairness constraints"},
+    {t:"Pose Estimation Fitness Tracker",d:"Detect body keypoints using MediaPipe Pose and count reps of squats/push-ups by angle computation.",tools:"Python, MediaPipe, OpenCV, NumPy",skills:"Python, Computer Vision",diff:"Intermediate",cat:"Computer Vision",time:"4h",out:"Exercise rep counter demo",use:"AI fitness coaching apps",stretch:"Add form feedback"},
+    {t:"MLflow Experiment Tracker",d:"Set up MLflow to track hyperparameter experiments for a CNN model. Compare runs and deploy best model.",tools:"Python, MLflow, TensorFlow",skills:"Python, TensorFlow, MLOps",diff:"Intermediate",cat:"MLOps",time:"3h",out:"MLflow tracking server + model registry",use:"ML experiment management",stretch:"Add DVC for data versioning"},
+    {t:"Transformer from Scratch",d:"Implement a minimal Transformer encoder with multi-head self-attention and positional encoding in pure PyTorch.",tools:"Python, PyTorch, NumPy",skills:"Python, PyTorch",diff:"Intermediate",cat:"NLP",time:"6h",out:"Working transformer implementation",use:"DL education and research",stretch:"Add causal decoder"},
+    {t:"Anomaly Detection with Autoencoder",d:"Train a convolutional autoencoder on normal manufacturing images to detect surface defects at inference time.",tools:"Python, TensorFlow, OpenCV",skills:"Python, TensorFlow, Computer Vision",diff:"Intermediate",cat:"Computer Vision",time:"4h",out:"Defect detection system with threshold",use:"Industrial quality control",stretch:"Try VAE approach"},
+    {t:"dbt Analytics Pipeline",d:"Build a dbt data transformation pipeline on an e-commerce Postgres database with tests, docs, and lineage.",tools:"dbt, Postgres, SQL",skills:"SQL, Data Engineering",diff:"Intermediate",cat:"Data Engineering",time:"4h",out:"dbt project with 10+ models",use:"Analytics engineering workflows",stretch:"Add custom macros"},
+    {t:"Multi-label Text Classifier",d:"Classify Stack Overflow questions into multiple technology tags using DistilBERT with sigmoid output layer.",tools:"Python, HuggingFace, PyTorch",skills:"Python, PyTorch, NLP",diff:"Intermediate",cat:"NLP",time:"4h",out:"Multi-label classifier with micro-F1",use:"Developer community tools",stretch:"Add active learning loop"},
+    {t:"Reinforcement Learning CartPole",d:"Train a DQN agent to balance a CartPole using OpenAI Gymnasium. Visualize reward curves and epsilon decay.",tools:"Python, Gymnasium, PyTorch",skills:"Python, PyTorch, Reinforcement Learning",diff:"Intermediate",cat:"Reinforcement Learning",time:"4h",out:"Trained DQN agent + reward plot",use:"Control systems simulation",stretch:"Implement Double DQN"},
+    {t:"Docker ML Serving Container",d:"Containerize a Scikit-learn model with FastAPI and Docker. Add health checks, versioning, and Prometheus metrics.",tools:"Python, FastAPI, Docker",skills:"Python, FastAPI, Docker, MLOps",diff:"Intermediate",cat:"MLOps",time:"4h",out:"Dockerized ML API",use:"Production model deployment",stretch:"Add model versioning"},
+    {t:"Audio Keyword Spotting",d:"Train a small CNN on Mel spectrograms to detect 10 spoken keywords from Google Speech Commands dataset.",tools:"Python, librosa, TensorFlow",skills:"Python, TensorFlow",diff:"Intermediate",cat:"Edge AI",time:"4h",out:"Keyword spotting model",use:"Voice-activated IoT devices",stretch:"Export to TFLite"},
+    {t:"Text-to-SQL Generator",d:"Build a system that converts natural language queries to SQL using few-shot prompting and schema injection.",tools:"Python, Ollama, SQLite, LangChain",skills:"Python, SQL, Prompt Engineering",diff:"Intermediate",cat:"AI Agents",time:"4h",out:"NL to SQL query interface",use:"Business intelligence tools",stretch:"Add multi-table joins"},
+    {t:"Graph Neural Network Node Classifier",d:"Implement a Graph Convolutional Network (GCN) to classify nodes in the Cora citation network.",tools:"Python, PyTorch Geometric",skills:"Python, PyTorch",diff:"Intermediate",cat:"Tabular ML",time:"5h",out:"Node classification GCN",use:"Academic citation ranking",stretch:"Try GraphSAGE"},
+    {t:"Federated Learning Simulator",d:"Simulate federated learning across 10 clients on a partitioned MNIST dataset. Implement FedAvg aggregation.",tools:"Python, PyTorch, NumPy",skills:"Python, PyTorch, MLOps",diff:"Intermediate",cat:"MLOps",time:"5h",out:"FL simulation with privacy metrics",use:"Privacy-preserving ML",stretch:"Add differential privacy"},
+    {t:"Video Action Recognition",d:"Classify human actions in short video clips using a 3D CNN (C3D) on the UCF-101 dataset.",tools:"Python, PyTorch, OpenCV",skills:"Python, PyTorch, Computer Vision",diff:"Intermediate",cat:"Computer Vision",time:"5h",out:"Action classifier + demo video",use:"Sports analytics platforms",stretch:"Try SlowFast network"},
+    {t:"Streaming Data Pipeline with Kafka",d:"Build a real-time ML feature pipeline using Kafka producers/consumers with Python and rolling aggregations.",tools:"Python, Kafka, Pandas",skills:"Python, Data Engineering",diff:"Intermediate",cat:"Data Engineering",time:"5h",out:"Real-time feature pipeline",use:"Fraud detection systems",stretch:"Add Faust for stream processing"},
+    {t:"Medical Image Classification",d:"Classify chest X-rays (normal/pneumonia/COVID) using DenseNet-121 with class-weighted loss.",tools:"Python, PyTorch, torchvision",skills:"Python, PyTorch, Computer Vision",diff:"Intermediate",cat:"Computer Vision",time:"5h",out:"Medical classifier with AUC report",use:"Clinical decision support",stretch:"Add GradCAM explanations"},
+    {t:"Hyperparameter Optimization with Optuna",d:"Use Optuna to optimize a LightGBM model across 50 trials. Visualize parameter importance and trial history.",tools:"Python, Optuna, LightGBM",skills:"Python, Scikit-learn, Feature Engineering",diff:"Intermediate",cat:"Tabular ML",time:"3h",out:"Optimized model + Optuna dashboard",use:"AutoML systems",stretch:"Add pruning callbacks"},
+    {t:"Diffusion Model Noise Scheduler",d:"Implement a DDPM noise scheduler from scratch and visualize forward/reverse diffusion on CIFAR-10 images.",tools:"Python, PyTorch, Matplotlib",skills:"Python, PyTorch",diff:"Intermediate",cat:"Generative AI",time:"6h",out:"DDPM training loop + image denoising",use:"Generative image research",stretch:"Add DDIM sampling"},
+    {t:"Kubernetes ML Deployment",d:"Deploy a FastAPI ML model to a local Kubernetes cluster using Minikube. Configure HPA and rolling updates.",tools:"Python, FastAPI, Kubernetes, Docker",skills:"Python, Docker, MLOps, Cloud Deployment",diff:"Intermediate",cat:"MLOps",time:"5h",out:"K8s deployment manifest + API",use:"Scalable ML production systems",stretch:"Add Istio service mesh"},
+    {t:"Sequence Labeling with CRF",d:"Implement a Bi-LSTM + CRF model for NER on the CoNLL-2003 English dataset. Report entity-level F1.",tools:"Python, PyTorch, torchcrf",skills:"Python, PyTorch, NLP",diff:"Intermediate",cat:"NLP",time:"5h",out:"NER model with F1 report",use:"Information extraction pipelines",stretch:"Replace LSTM with BERT"},
+    {t:"Tabular Diffusion Generator",d:"Generate synthetic tabular data using a conditional diffusion model. Compare distributions with real data.",tools:"Python, PyTorch, Pandas",skills:"Python, PyTorch, Feature Engineering",diff:"Intermediate",cat:"Generative AI",time:"5h",out:"Synthetic dataset with statistical report",use:"Private data augmentation",stretch:"Add privacy metrics (TVD)"},
+    {t:"TFLite Edge Deployment",d:"Convert a MobileNetV3 image classifier to TFLite with INT8 quantization. Benchmark on Raspberry Pi.",tools:"Python, TensorFlow Lite, Raspberry Pi",skills:"Python, TensorFlow, Edge AI",diff:"Intermediate",cat:"Edge AI",time:"4h",out:"Quantized .tflite model + latency report",use:"IoT vision applications",stretch:"Add dynamic range quantization"},
+    {t:"Multi-Agent Debate System",d:"Build a multi-agent system where two LLM agents debate a topic and a judge agent evaluates arguments.",tools:"Python, LangChain, Ollama",skills:"Python, Prompt Engineering, AI Agents",diff:"Intermediate",cat:"AI Agents",time:"4h",out:"Multi-agent debate transcript",use:"AI-assisted decision support",stretch:"Add scoring rubric"},
+    {t:"Neural Style Transfer",d:"Apply artistic style transfer by optimizing content and style loss using a pre-trained VGG-19 network.",tools:"Python, PyTorch, Pillow",skills:"Python, PyTorch, Computer Vision",diff:"Intermediate",cat:"Generative AI",time:"4h",out:"Stylized image outputs",use:"Digital art tools",stretch:"Real-time video style transfer"},
+    {t:"Causal Inference with DoWhy",d:"Estimate causal effect of an intervention (ad campaign) on sales using propensity score matching and DoWhy.",tools:"Python, DoWhy, Pandas",skills:"Python, Pandas, Feature Engineering",diff:"Intermediate",cat:"Tabular ML",time:"4h",out:"Causal effect estimate + DAG",use:"Marketing attribution analysis",stretch:"Add DML estimator"},
+    {t:"RL Maze Solver with Q-Learning",d:"Train a Q-learning agent to navigate a procedurally generated maze. Visualize Q-table heat maps.",tools:"Python, NumPy, Matplotlib",skills:"Python, NumPy, Reinforcement Learning",diff:"Intermediate",cat:"Reinforcement Learning",time:"3h",out:"Q-learning agent + maze solver",use:"Robotics path planning",stretch:"Add A* comparison"},
+
+    // ── DAYS 61-90: INTERMEDIATE-ADVANCED ────────────────────
+    {t:"Code Review Assistant",d:"Build an AI code reviewer using an LLM that analyses Python code quality, security issues, and style violations.",tools:"Python, Ollama, AST, FastAPI",skills:"Python, Prompt Engineering, FastAPI",diff:"Advanced",cat:"AI Agents",time:"5h",out:"Code review API + demo",use:"Developer tooling",stretch:"Add PR GitHub integration"},
+    {t:"Real-Time Fraud Detection",d:"Build a streaming fraud detection system using River (online ML) that learns from each transaction in real time.",tools:"Python, River, Kafka, FastAPI",skills:"Python, Feature Engineering, Data Engineering",diff:"Advanced",cat:"Tabular ML",time:"6h",out:"Online learning fraud system",use:"Payment processing security",stretch:"Add concept drift detection"},
+    {t:"LoRA Fine-tuning LLM",d:"Fine-tune a 7B parameter LLM using LoRA adapters for instruction following on a custom dataset with QLoRA.",tools:"Python, HuggingFace, PEFT, bitsandbytes",skills:"Python, PyTorch, Prompt Engineering",diff:"Advanced",cat:"NLP",time:"8h",out:"Fine-tuned LoRA adapter",use:"Domain-specific AI assistants",stretch:"Merge and export GGUF"},
+    {t:"3D Point Cloud Segmentation",d:"Segment 3D LiDAR point clouds using PointNet++ to identify building, vegetation, and road surfaces.",tools:"Python, PyTorch, Open3D",skills:"Python, PyTorch, Computer Vision",diff:"Advanced",cat:"Computer Vision",time:"6h",out:"3D segmentation model",use:"Autonomous vehicle perception",stretch:"Try MinkowskiEngine"},
+    {t:"GAN Image Synthesis",d:"Train a conditional GAN (cGAN) to generate class-conditional CIFAR-10 images. Compute FID score.",tools:"Python, PyTorch, torchvision",skills:"Python, PyTorch, Generative AI",diff:"Advanced",cat:"Generative AI",time:"7h",out:"cGAN + FID evaluation",use:"Synthetic data generation",stretch:"Upgrade to StyleGAN2"},
+    {t:"Causal Time Series Forecasting",d:"Apply N-BEATS with hierarchical reconciliation to forecast retail sales at store, category, and SKU levels.",tools:"Python, NeuralForecast, Pandas",skills:"Python, Pandas, Time Series",diff:"Advanced",cat:"Time Series",time:"6h",out:"Hierarchical forecast with WAPE",use:"Supply chain optimization",stretch:"Add conformal prediction intervals"},
+    {t:"Airflow ML Pipeline",d:"Orchestrate a full ML pipeline (data ingestion, feature store, training, evaluation, deployment) using Apache Airflow.",tools:"Python, Airflow, Scikit-learn, PostgreSQL",skills:"Python, MLOps, Data Engineering, SQL",diff:"Advanced",cat:"MLOps",time:"7h",out:"Automated retraining pipeline",use:"Production ML systems",stretch:"Add Great Expectations"},
+    {t:"Vision Transformer from Scratch",d:"Implement ViT (Vision Transformer) for image classification on CIFAR-100. Compare with ResNet baseline.",tools:"Python, PyTorch",skills:"Python, PyTorch, Computer Vision",diff:"Advanced",cat:"Computer Vision",time:"8h",out:"ViT implementation + benchmark",use:"Image recognition research",stretch:"Add DeiT distillation"},
+    {t:"Protein Structure Classifier",d:"Classify protein secondary structure (helix/sheet/coil) from amino acid sequences using a 1D CNN + attention.",tools:"Python, PyTorch, BioPython",skills:"Python, PyTorch, Feature Engineering",diff:"Advanced",cat:"Tabular ML",time:"6h",out:"Protein classifier with accuracy report",use:"Bioinformatics pipelines",stretch:"Use ESM-2 embeddings"},
+    {t:"Automated Prompt Optimizer",d:"Build a system that automatically refines LLM prompts using gradient-free black-box optimization (DSPy).",tools:"Python, DSPy, Ollama",skills:"Python, Prompt Engineering, AI Agents",diff:"Advanced",cat:"AI Agents",time:"5h",out:"Optimized prompt pipeline",use:"LLM application tuning",stretch:"Add multi-metric optimization"},
+    {t:"Speech Emotion Recognition",d:"Recognize emotions (happy, sad, angry, neutral) from audio using MFCC features and a Bi-GRU network.",tools:"Python, librosa, PyTorch, torchaudio",skills:"Python, PyTorch, Feature Engineering",diff:"Advanced",cat:"NLP",time:"6h",out:"Audio emotion classifier",use:"Call center analytics",stretch:"Add speaker diarization"},
+    {t:"Recommender System with Matrix Factorization",d:"Implement neural collaborative filtering with user/item embeddings trained on implicit feedback data.",tools:"Python, PyTorch, Pandas",skills:"Python, PyTorch, Feature Engineering",diff:"Advanced",cat:"Tabular ML",time:"5h",out:"Neural CF model + NDCG@10",use:"E-commerce personalization",stretch:"Add sequential modeling"},
+    {t:"Rust + ONNX Edge Inference",d:"Export a Python PyTorch model to ONNX and run inference in Rust using the ort crate. Benchmark latency.",tools:"Python, PyTorch, Rust, ONNX Runtime",skills:"Python, PyTorch, Edge AI",diff:"Advanced",cat:"Edge AI",time:"7h",out:"ONNX Rust inference binary",use:"Embedded ML applications",stretch:"Add C++ inference wrapper"},
+    {t:"Multimodal Sentiment Fusion",d:"Fuse text, audio, and video features for sentiment analysis using a cross-modal attention fusion network.",tools:"Python, PyTorch, HuggingFace, OpenCV",skills:"Python, PyTorch, NLP, Computer Vision",diff:"Advanced",cat:"NLP",time:"8h",out:"Multimodal sentiment model",use:"Media monitoring platforms",stretch:"Add late fusion baseline"},
+    {t:"Monte Carlo Tree Search Agent",d:"Implement MCTS for the game of Connect Four. Compare against random and minimax opponents.",tools:"Python, NumPy",skills:"Python, NumPy, Reinforcement Learning",diff:"Advanced",cat:"Reinforcement Learning",time:"6h",out:"MCTS game-playing agent",use:"Game AI research",stretch:"Add UCB1 tuning"},
+    {t:"Feature Store with Feast",d:"Build a feature store for an ML system using Feast with Redis online store and Parquet offline store.",tools:"Python, Feast, Redis, Pandas",skills:"Python, MLOps, Data Engineering",diff:"Advanced",cat:"MLOps",time:"6h",out:"Production feature store",use:"Real-time ML serving",stretch:"Add Hopsworks comparison"},
+    {t:"Contrastive Learning (SimCLR)",d:"Pre-train an image encoder using SimCLR self-supervised learning on unlabeled images. Evaluate via linear probing.",tools:"Python, PyTorch, torchvision",skills:"Python, PyTorch, Feature Engineering",diff:"Advanced",cat:"Computer Vision",time:"7h",out:"Self-supervised encoder + probe accuracy",use:"Low-label ML research",stretch:"Try BYOL method"},
+    {t:"NLP Data Flywheel",d:"Build an active learning loop that selects uncertain model predictions for human labeling using Label Studio.",tools:"Python, Scikit-learn, Label Studio",skills:"Python, NLP, MLOps",diff:"Advanced",cat:"NLP",time:"5h",out:"Active learning pipeline",use:"Annotation workflow automation",stretch:"Add query by committee"},
+    {t:"Autonomous Web Scraper Agent",d:"Build an AI agent that autonomously navigates websites, extracts structured data, and handles pagination using Playwright.",tools:"Python, Playwright, LangChain, Ollama",skills:"Python, AI Agents, Prompt Engineering",diff:"Advanced",cat:"AI Agents",time:"5h",out:"Autonomous scraping agent",use:"Competitive intelligence tools",stretch:"Add anti-bot evasion"},
+    {t:"Bayesian Optimization for ML",d:"Implement Bayesian optimization from scratch using a Gaussian Process surrogate for hyperparameter tuning.",tools:"Python, scikit-optimize, NumPy",skills:"Python, NumPy, Feature Engineering",diff:"Advanced",cat:"Tabular ML",time:"6h",out:"BO optimizer + convergence plot",use:"AutoML systems",stretch:"Add acquisition function variants"},
+    {t:"Whisper Audio Transcription API",d:"Build a production-ready audio transcription API using Whisper with speaker diarization and timestamp output.",tools:"Python, Whisper, FastAPI, pyannote",skills:"Python, FastAPI, MLOps",diff:"Advanced",cat:"NLP",time:"5h",out:"Transcription REST API",use:"Meeting intelligence tools",stretch:"Add real-time streaming"},
+    {t:"Distributed Training with PyTorch DDP",d:"Train a ResNet-50 across 4 GPUs using PyTorch Distributed Data Parallel. Profile GPU utilization.",tools:"Python, PyTorch, NCCL",skills:"Python, PyTorch, MLOps",diff:"Advanced",cat:"MLOps",time:"6h",out:"Multi-GPU training script",use:"Large-scale model training",stretch:"Add gradient checkpointing"},
+    {t:"Depth Estimation Monocular",d:"Estimate scene depth from a single image using MiDaS DPT-Large model and visualize depth maps.",tools:"Python, PyTorch, OpenCV, MiDaS",skills:"Python, PyTorch, Computer Vision",diff:"Advanced",cat:"Computer Vision",time:"4h",out:"Depth map generator",use:"AR/VR scene reconstruction",stretch:"Add 3D point cloud export"},
+    {t:"Conformal Prediction Wrapper",d:"Add distribution-free prediction intervals to any ML model using conformal prediction (MAPIE library).",tools:"Python, MAPIE, Scikit-learn",skills:"Python, Scikit-learn, Feature Engineering",diff:"Advanced",cat:"Tabular ML",time:"4h",out:"Calibrated uncertainty estimates",use:"High-stakes ML applications",stretch:"Add adaptive conformal"},
+    {t:"Knowledge Graph Builder",d:"Extract entities and relations from text using LLM and build a knowledge graph stored in Neo4j.",tools:"Python, Ollama, Neo4j, LangChain",skills:"Python, NLP, Data Engineering",diff:"Advanced",cat:"NLP",time:"6h",out:"Knowledge graph + Cypher query API",use:"Enterprise knowledge management",stretch:"Add graph-based RAG"},
+    {t:"On-Device LLM with llama.cpp",d:"Run a quantized 3B LLM on CPU using llama.cpp Python bindings. Build a local chat interface with Flask.",tools:"Python, llama.cpp, Flask",skills:"Python, Edge AI, Prompt Engineering",diff:"Advanced",cat:"Edge AI",time:"4h",out:"Local LLM chat interface",use:"Privacy-first AI assistants",stretch:"Add function calling"},
+    {t:"Reward Model Training",d:"Train a reward model from human preference data using Bradley-Terry model on a curated comparison dataset.",tools:"Python, PyTorch, HuggingFace",skills:"Python, PyTorch, Prompt Engineering",diff:"Advanced",cat:"Generative AI",time:"7h",out:"Trained reward model",use:"RLHF pipeline components",stretch:"Add preference data generation"},
+    {t:"Streaming LLM Inference Server",d:"Build a high-throughput LLM inference server using vLLM with PagedAttention. Benchmark tokens/second.",tools:"Python, vLLM, FastAPI",skills:"Python, MLOps, FastAPI",diff:"Advanced",cat:"MLOps",time:"5h",out:"vLLM inference server + benchmark",use:"Production LLM APIs",stretch:"Add speculative decoding"},
+    {t:"3D Object Detection with PointPillars",d:"Detect 3D bounding boxes of vehicles in KITTI LiDAR point clouds using PointPillars architecture.",tools:"Python, PyTorch, Open3D",skills:"Python, PyTorch, Computer Vision",diff:"Advanced",cat:"Computer Vision",time:"8h",out:"3D detection model + eval metrics",use:"Autonomous driving systems",stretch:"Add multi-sensor fusion"},
+    {t:"Multi-objective RL with MORL",d:"Train an RL agent on a multi-objective traffic signal control task balancing throughput and emissions.",tools:"Python, MORL-Baselines, Gymnasium",skills:"Python, PyTorch, Reinforcement Learning",diff:"Advanced",cat:"Reinforcement Learning",time:"7h",out:"Pareto-front policy set",use:"Smart city management",stretch:"Add SUMO simulation"},
+
+    // ── DAYS 91-130: ADVANCED ─────────────────────────────────
+    {t:"LLM Evaluation Framework",d:"Build an automated LLM evaluation suite with LLM-as-judge, embedding similarity, and task-specific metrics.",tools:"Python, RAGAS, Ollama, Pandas",skills:"Python, Prompt Engineering, MLOps",diff:"Advanced",cat:"AI Agents",time:"6h",out:"Eval framework + benchmark dashboard",use:"LLM product QA teams",stretch:"Add adversarial test cases"},
+    {t:"Mixture of Experts Router",d:"Implement a sparse MoE layer with top-k routing for a small transformer. Analyze expert utilization.",tools:"Python, PyTorch",skills:"Python, PyTorch",diff:"Expert",cat:"Generative AI",time:"8h",out:"MoE layer + expert utilization plots",use:"Efficient LLM architecture",stretch:"Add load balancing loss"},
+    {t:"Autonomous Data Cleaning Agent",d:"Build an LLM agent that autonomously inspects a dataset, identifies issues, and writes pandas code to fix them.",tools:"Python, LangChain, Ollama, Pandas",skills:"Python, Pandas, AI Agents, Prompt Engineering",diff:"Advanced",cat:"AI Agents",time:"5h",out:"Self-healing data pipeline",use:"Data quality automation",stretch:"Add unit test generation"},
+    {t:"Temporal Fusion Transformer",d:"Implement TFT for multi-horizon retail forecasting with interpretable attention and known future features.",tools:"Python, PyTorch Forecasting",skills:"Python, PyTorch, Time Series",diff:"Advanced",cat:"Time Series",time:"7h",out:"TFT model with variable importance",use:"Retail demand planning",stretch:"Add ensemble with N-HiTS"},
+    {t:"Semantic Code Search",d:"Build a semantic code search engine using CodeBERT embeddings indexed in FAISS for Python repositories.",tools:"Python, HuggingFace, FAISS",skills:"Python, NLP, Feature Engineering",diff:"Advanced",cat:"NLP",time:"5h",out:"Code search engine + benchmark",use:"Developer productivity tools",stretch:"Add function-level chunking"},
+    {t:"Neuromorphic Event Camera Model",d:"Process event camera data streams using a spiking neural network (SNN) for gesture recognition.",tools:"Python, snnTorch, PyTorch",skills:"Python, PyTorch, Edge AI",diff:"Expert",cat:"Edge AI",time:"8h",out:"SNN event processor",use:"Ultra-low power edge vision",stretch:"Add STDP learning"},
+    {t:"Multi-modal RAG System",d:"Build a RAG system over PDF, images, and tables using ColPali for visual document retrieval.",tools:"Python, ColPali, LangChain, Qdrant",skills:"Python, NLP, AI Agents, Prompt Engineering",diff:"Advanced",cat:"AI Agents",time:"7h",out:"Multimodal document Q&A system",use:"Enterprise document intelligence",stretch:"Add table reasoning"},
+    {t:"Privacy-Preserving ML with PySyft",d:"Train a logistic regression model across 3 data silos without sharing raw data using PySyft federated computation.",tools:"Python, PySyft, PyTorch",skills:"Python, PyTorch, MLOps",diff:"Expert",cat:"MLOps",time:"8h",out:"Privacy-preserving FL demo",use:"Healthcare data collaboration",stretch:"Add secret sharing"},
+    {t:"Latent Diffusion Inpainting",d:"Implement image inpainting using Stable Diffusion's latent space with masked region conditioning.",tools:"Python, diffusers, PyTorch, CUDA",skills:"Python, PyTorch, Generative AI",diff:"Advanced",cat:"Generative AI",time:"6h",out:"Inpainting pipeline + demo app",use:"Content editing tools",stretch:"Add attention editing"},
+    {t:"Online Reinforcement Learning for RecSys",d:"Train a bandit-based recommendation agent using Thompson Sampling that learns from real-time user feedback.",tools:"Python, River, FastAPI",skills:"Python, Reinforcement Learning, Feature Engineering",diff:"Advanced",cat:"Reinforcement Learning",time:"6h",out:"Online bandit recommendation system",use:"Personalized content delivery",stretch:"Add contextual bandits"},
+    {t:"Sparse Autoencoder Mechanistic Interp",d:"Train a sparse autoencoder on GPT-2 activations to identify monosemantic features for interpretability research.",tools:"Python, PyTorch, TransformerLens",skills:"Python, PyTorch",diff:"Expert",cat:"Generative AI",time:"10h",out:"Feature dictionary + neuron analysis",use:"AI safety interpretability",stretch:"Add automated labeling"},
+    {t:"Real-Time Pose Mesh Avatar",d:"Map full-body pose to an animated 3D avatar in real time using MediaPipe Holistic and Three.js rendering.",tools:"Python, MediaPipe, Three.js, WebSockets",skills:"Python, Computer Vision",diff:"Advanced",cat:"Computer Vision",time:"7h",out:"Live 3D avatar demo",use:"Virtual try-on platforms",stretch:"Add expression blending"},
+    {t:"SQL Agent with LangGraph",d:"Build a stateful SQL agent using LangGraph that maintains context across queries and self-corrects errors.",tools:"Python, LangGraph, Ollama, SQLite",skills:"Python, SQL, AI Agents, Prompt Engineering",diff:"Advanced",cat:"AI Agents",time:"5h",out:"Stateful SQL agent",use:"Data analysis automation",stretch:"Add multi-database routing"},
+    {t:"Optimum ONNX Quantization",d:"Quantize a BERT model to INT8 using HuggingFace Optimum. Compare accuracy/latency tradeoffs.",tools:"Python, Optimum, ONNX, HuggingFace",skills:"Python, NLP, Edge AI, MLOps",diff:"Advanced",cat:"Edge AI",time:"5h",out:"Quantized BERT + tradeoff report",use:"Mobile NLP applications",stretch:"Try SmoothQuant"},
+    {t:"Synthetic Data Evaluation Suite",d:"Evaluate synthetic tabular data quality using statistical tests: KS-test, correlation matrices, and utility metrics.",tools:"Python, SDV, Pandas, SciPy",skills:"Python, Pandas, Feature Engineering",diff:"Advanced",cat:"Data Engineering",time:"5h",out:"Synthetic data quality dashboard",use:"Data augmentation validation",stretch:"Add privacy metrics"},
+    {t:"Protein Folding with ESMFold",d:"Predict 3D protein structures from amino acid sequences using Meta's ESMFold and visualize in py3Dmol.",tools:"Python, ESMFold, py3Dmol",skills:"Python, PyTorch, Feature Engineering",diff:"Advanced",cat:"Tabular ML",time:"5h",out:"3D protein structure predictions",use:"Drug discovery pipelines",stretch:"Compare with AlphaFold2"},
+    {t:"WASM ML Inference in Browser",d:"Compile a TFLite model to WebAssembly and run inference directly in the browser with no server calls.",tools:"JavaScript, TFLite WASM, Python",skills:"Python, Edge AI",diff:"Advanced",cat:"Edge AI",time:"6h",out:"Browser-side ML inference demo",use:"Privacy-preserving web apps",stretch:"Add WebGPU acceleration"},
+    {t:"Self-Supervised Video Representation",d:"Pre-train a video encoder using masked video modeling (VideoMAE) on a small unlabeled clip dataset.",tools:"Python, PyTorch, VideoMAE",skills:"Python, PyTorch, Computer Vision",diff:"Expert",cat:"Computer Vision",time:"9h",out:"Pre-trained video encoder",use:"Video understanding research",stretch:"Fine-tune on UCF-101"},
+    {t:"Adaptive RAG with Self-Reflection",d:"Build a RAG agent that self-assesses answer confidence and triggers additional retrieval when uncertain.",tools:"Python, LangGraph, FAISS, Ollama",skills:"Python, AI Agents, Prompt Engineering",diff:"Advanced",cat:"AI Agents",time:"6h",out:"Self-reflective RAG pipeline",use:"Reliable AI assistants",stretch:"Add CRAG correction"},
+    {t:"Imitation Learning from Demos",d:"Train a behavior cloning agent on expert demonstrations for robotic arm manipulation in a simulated environment.",tools:"Python, PyTorch, MuJoCo",skills:"Python, PyTorch, Reinforcement Learning",diff:"Expert",cat:"Reinforcement Learning",time:"8h",out:"BC agent + rollout demo",use:"Robotics automation",stretch:"Add DAgger improvement"},
+    {t:"Causal Discovery with PC Algorithm",d:"Discover causal structure in observational data using the PC algorithm and visualize the causal DAG.",tools:"Python, causal-learn, Pandas, NetworkX",skills:"Python, Pandas, Data Engineering",diff:"Advanced",cat:"Data Engineering",time:"5h",out:"Causal DAG + Markov blankets",use:"Healthcare causal analysis",stretch:"Add FCI algorithm"},
+
+    // ── DAYS 131-170: EXPERT LEVEL ────────────────────────────
+    {t:"Constitutional AI Filter",d:"Build a constitutional AI content filter that uses self-critique and revision to align model outputs with principles.",tools:"Python, Ollama, FastAPI",skills:"Python, Prompt Engineering, AI Agents",diff:"Expert",cat:"AI Agents",time:"6h",out:"Constitutional filter pipeline",use:"LLM safety systems",stretch:"Add multi-principle debate"},
+    {t:"Flash Attention Implementation",d:"Implement the Flash Attention v2 algorithm from scratch in Triton CUDA for efficient transformer training.",tools:"Python, Triton, PyTorch, CUDA",skills:"Python, PyTorch",diff:"Expert",cat:"Generative AI",time:"12h",out:"Custom CUDA attention kernel",use:"LLM training optimization",stretch:"Add backward pass"},
+    {t:"Time Series Foundation Model",d:"Fine-tune a Chronos or TimesFM foundation model on domain-specific time series data from manufacturing sensors.",tools:"Python, Chronos, Pandas, PyTorch",skills:"Python, PyTorch, Time Series",diff:"Expert",cat:"Time Series",time:"8h",out:"Fine-tuned time series FM",use:"Industrial predictive maintenance",stretch:"Add zero-shot benchmarking"},
+    {t:"Speculative Decoding Engine",d:"Implement speculative decoding with a small draft model and large target model. Measure acceptance rate and speedup.",tools:"Python, PyTorch, HuggingFace",skills:"Python, PyTorch",diff:"Expert",cat:"Generative AI",time:"10h",out:"Speculative decoder + speedup metrics",use:"LLM inference optimization",stretch:"Add tree-based speculation"},
+    {t:"Hierarchical RL with Options Framework",d:"Implement the Options Framework in hierarchical RL for long-horizon task planning on Minigrid environments.",tools:"Python, Gymnasium, PyTorch",skills:"Python, PyTorch, Reinforcement Learning",diff:"Expert",cat:"Reinforcement Learning",time:"10h",out:"HRL agent + task success rate",use:"Complex task automation",stretch:"Add option discovery"},
+    {t:"Neural Architecture Search",d:"Run differentiable NAS (DARTS) to search for optimal cell architectures for CIFAR-100 classification.",tools:"Python, PyTorch",skills:"Python, PyTorch, Computer Vision",diff:"Expert",cat:"Computer Vision",time:"10h",out:"Searched architecture + accuracy",use:"Efficient model design",stretch:"Add hardware-aware NAS"},
+    {t:"Streaming LLM Context Compression",d:"Implement StreamingLLM's attention sink mechanism to handle infinitely long contexts without memory growth.",tools:"Python, PyTorch, HuggingFace",skills:"Python, PyTorch",diff:"Expert",cat:"Generative AI",time:"9h",out:"Infinite context LLM demo",use:"Long document processing",stretch:"Add retrieval augmentation"},
+    {t:"World Model for RL (DreamerV3)",d:"Train a DreamerV3 world model on a visual RL task. Use imagined rollouts for policy optimization.",tools:"Python, PyTorch, Gymnasium",skills:"Python, PyTorch, Reinforcement Learning",diff:"Expert",cat:"Reinforcement Learning",time:"12h",out:"World model + policy from dreams",use:"Sample-efficient RL",stretch:"Apply to real robot"},
+    {t:"Semantic Similarity at Scale",d:"Build a billion-scale approximate nearest neighbor search system using ScaNN with BERT embeddings.",tools:"Python, ScaNN, HuggingFace, Pandas",skills:"Python, NLP, Data Engineering",diff:"Expert",cat:"NLP",time:"8h",out:"ANN search system + recall benchmark",use:"Enterprise semantic search",stretch:"Add re-ranking layer"},
+    {t:"CLIP Zero-Shot Adaptation",d:"Adapt CLIP for a specialized zero-shot classification task using prompt ensembling and linear probe comparison.",tools:"Python, OpenCLIP, PyTorch",skills:"Python, PyTorch, Computer Vision, Prompt Engineering",diff:"Expert",cat:"Computer Vision",time:"7h",out:"Adapted CLIP zero-shot system",use:"Data-efficient vision AI",stretch:"Add CoOp prompt tuning"},
+    {t:"Multi-Agent RL with MAPPO",d:"Train cooperative multi-agent policies using MAPPO on the StarCraft Multi-Agent Challenge (SMAC).",tools:"Python, PyMARL, PyTorch",skills:"Python, PyTorch, Reinforcement Learning",diff:"Expert",cat:"Reinforcement Learning",time:"12h",out:"Cooperative multi-agent policy",use:"Multi-robot coordination",stretch:"Add communication channels"},
+    {t:"Mixture of Depths Transformer",d:"Implement Mixture of Depths routing to skip transformer layers for easy tokens. Compare FLOPs vs accuracy.",tools:"Python, PyTorch",skills:"Python, PyTorch",diff:"Expert",cat:"Generative AI",time:"10h",out:"MoD transformer + efficiency analysis",use:"Efficient LLM inference",stretch:"Combine with MoE"},
+    {t:"Causally-Informed Feature Selection",d:"Select features using causal Markov blanket discovery rather than correlation. Compare to SHAP-based selection.",tools:"Python, causal-learn, Scikit-learn",skills:"Python, Feature Engineering, Pandas",diff:"Expert",cat:"Tabular ML",time:"7h",out:"Causal feature selection report",use:"Robust ML pipelines",stretch:"Add do-calculus intervention test"},
+    {t:"Neural ODEs for Time Series",d:"Model continuous-time dynamics with Neural ODEs (torchdiffeq) for irregularly-sampled medical time series.",tools:"Python, torchdiffeq, PyTorch",skills:"Python, PyTorch, Time Series",diff:"Expert",cat:"Time Series",time:"9h",out:"Neural ODE time series model",use:"Clinical monitoring systems",stretch:"Add Latent ODE variant"},
+    {t:"Compiler for ML Models (MLIR)",d:"Lower a simple neural network to MLIR using ONNX-MLIR toolchain and execute on custom hardware simulator.",tools:"Python, ONNX-MLIR, C++",skills:"Python, Edge AI",diff:"Expert",cat:"Edge AI",time:"12h",out:"Compiled model binary",use:"ML hardware acceleration",stretch:"Add custom optimization pass"},
+    {t:"Online Learning with Concept Drift",d:"Implement adaptive windowing (ADWIN) to detect concept drift in streaming fraud data and auto-retrain.",tools:"Python, River, Pandas",skills:"Python, Data Engineering, Feature Engineering",diff:"Expert",cat:"Data Engineering",time:"7h",out:"Drift-adaptive ML system",use:"Non-stationary ML environments",stretch:"Add drift visualization"},
+    {t:"Protein Language Model Fine-tuning",d:"Fine-tune ESM-2 on a custom protein property prediction task using LoRA for parameter-efficient adaptation.",tools:"Python, ESM, HuggingFace, PyTorch",skills:"Python, PyTorch, Feature Engineering",diff:"Expert",cat:"Tabular ML",time:"9h",out:"Protein property predictor",use:"Computational biology pipelines",stretch:"Add structure conditioning"},
+    {t:"Reward-Free Exploration RL",d:"Implement the RND (Random Network Distillation) exploration bonus for intrinsic motivation in sparse-reward Atari.",tools:"Python, PyTorch, Stable-Baselines3",skills:"Python, PyTorch, Reinforcement Learning",diff:"Expert",cat:"Reinforcement Learning",time:"10h",out:"Intrinsically motivated RL agent",use:"Game-playing AI research",stretch:"Add ICM comparison"},
+    {t:"Verifiable Reasoning Chain LLM",d:"Build a system where an LLM generates reasoning chains and a verifier checks each step for logical consistency.",tools:"Python, LangGraph, Ollama",skills:"Python, AI Agents, Prompt Engineering",diff:"Expert",cat:"AI Agents",time:"7h",out:"Verifiable CoT reasoning system",use:"High-stakes AI decision support",stretch:"Add formal logic verifier"},
+    {t:"Efficient Finetuning with GaLore",d:"Apply GaLore (Gradient Low-Rank Projection) to fine-tune a 3B LLM with drastically reduced memory footprint.",tools:"Python, GaLore, HuggingFace",skills:"Python, PyTorch",diff:"Expert",cat:"Generative AI",time:"10h",out:"Memory-efficient fine-tuned model",use:"LLM training on consumer hardware",stretch:"Compare with LoRA variants"},
+
+    // ── DAYS 171-220: EXPERT APPLICATIONS ────────────────────
+    {t:"End-to-End MLOps Platform",d:"Build a mini ML platform with model registry, A/B testing, feature store, and monitoring dashboard.",tools:"Python, MLflow, Feast, FastAPI, Grafana",skills:"Python, MLOps, FastAPI, Cloud Deployment",diff:"Expert",cat:"MLOps",time:"12h",out:"Full MLOps platform demo",use:"Enterprise ML infrastructure",stretch:"Add canary deployments"},
+    {t:"Video Generation Conditioning",d:"Fine-tune a video diffusion model (AnimateDiff) on a specific visual style. Generate 4-second clips.",tools:"Python, AnimateDiff, diffusers, CUDA",skills:"Python, PyTorch, Generative AI",diff:"Expert",cat:"Generative AI",time:"12h",out:"Style-conditioned video clips",use:"Creative AI tools",stretch:"Add audio conditioning"},
+    {t:"Autonomous Research Agent",d:"Build an agent that autonomously reads arXiv papers, summarizes key contributions, and synthesizes literature reviews.",tools:"Python, LangGraph, ArXiv API, Ollama",skills:"Python, AI Agents, Prompt Engineering",diff:"Expert",cat:"AI Agents",time:"7h",out:"Automated literature review agent",use:"Academic research tools",stretch:"Add citation graph analysis"},
+    {t:"Real-Time Multi-Camera Tracking",d:"Implement multi-object tracking across multiple camera feeds using DeepSORT with re-identification embeddings.",tools:"Python, DeepSORT, OpenCV, PyTorch",skills:"Python, PyTorch, Computer Vision",diff:"Expert",cat:"Computer Vision",time:"10h",out:"Multi-camera tracking demo",use:"Retail analytics systems",stretch:"Add cross-camera re-ID"},
+    {t:"LLM-Guided Symbolic Regression",d:"Use an LLM to propose mathematical expressions and evaluate them to discover closed-form equations from data.",tools:"Python, Ollama, SymPy, NumPy",skills:"Python, Prompt Engineering, AI Agents",diff:"Expert",cat:"AI Agents",time:"8h",out:"Symbolic equation discovery system",use:"Scientific law discovery",stretch:"Add evolutionary search"},
+    {t:"Quantum ML Hybrid Classifier",d:"Build a hybrid quantum-classical classifier using PennyLane variational quantum circuits on a 4-qubit register.",tools:"Python, PennyLane, PyTorch",skills:"Python, PyTorch",diff:"Expert",cat:"Edge AI",time:"10h",out:"Hybrid QML classifier",use:"Quantum computing research",stretch:"Optimize circuit depth"},
+    {t:"Simulation-Based ML Calibration",d:"Calibrate a complex simulator (epidemiological model) to real data using neural posterior estimation (SBI).",tools:"Python, sbi, PyTorch",skills:"Python, PyTorch, Feature Engineering",diff:"Expert",cat:"Tabular ML",time:"10h",out:"Calibrated simulator + posterior plots",use:"Scientific modeling",stretch:"Add likelihood-free inference"},
+    {t:"Sparse Transformer for Code Generation",d:"Fine-tune a code generation model with sparse attention patterns optimized for long context code files.",tools:"Python, PyTorch, HuggingFace",skills:"Python, PyTorch, NLP",diff:"Expert",cat:"Generative AI",time:"11h",out:"Sparse attention code model",use:"AI coding assistants",stretch:"Add fill-in-middle training"},
+    {t:"Model Merging with TIES",d:"Merge multiple task-specific LLM fine-tunes into one model using TIES-merging without catastrophic forgetting.",tools:"Python, HuggingFace, PyTorch",skills:"Python, PyTorch",diff:"Expert",cat:"Generative AI",time:"8h",out:"Merged multi-task LLM",use:"Efficient model deployment",stretch:"Try Model Breadcrumbs"},
+    {t:"Robotic Grasping Simulation",d:"Train a RL agent for robotic grasp planning in PyBullet simulation using SAC with point cloud observations.",tools:"Python, PyBullet, PyTorch",skills:"Python, PyTorch, Reinforcement Learning",diff:"Expert",cat:"Reinforcement Learning",time:"12h",out:"Grasping policy + success rate",use:"Industrial robotics",stretch:"Sim-to-real transfer"},
+    {t:"Self-Play Curriculum Learning",d:"Implement self-play with automatic opponent curriculum for a two-player competitive game using PPO.",tools:"Python, PettingZoo, Ray RLlib",skills:"Python, PyTorch, Reinforcement Learning",diff:"Expert",cat:"Reinforcement Learning",time:"10h",out:"Self-play trained agent",use:"Competitive AI training",stretch:"Add ELO rating system"},
+    {t:"3D Gaussian Splatting",d:"Reconstruct a 3D scene from multi-view images using 3D Gaussian Splatting. Render novel viewpoints.",tools:"Python, gaussian-splatting, COLMAP",skills:"Python, Computer Vision",diff:"Expert",cat:"Computer Vision",time:"12h",out:"3D Gaussian splat scene",use:"VR/AR scene capture",stretch:"Add real-time viewer"},
+    {t:"LLM Continual Learning",d:"Fine-tune an LLM on sequential tasks while preventing catastrophic forgetting using EWC and replay.",tools:"Python, HuggingFace, PyTorch",skills:"Python, PyTorch",diff:"Expert",cat:"Generative AI",time:"10h",out:"Continual learning LLM demo",use:"Lifelong AI systems",stretch:"Add PackNet method"},
+    {t:"Causal ML for Uplift Modeling",d:"Build a causal uplift model using T-learner, S-learner, and X-learner to optimize marketing treatment assignment.",tools:"Python, CausalML, Scikit-learn",skills:"Python, Pandas, Feature Engineering",diff:"Expert",cat:"Tabular ML",time:"7h",out:"Uplift model + AUUC curves",use:"Marketing optimization",stretch:"Add Dragonnet"},
+    {t:"Satellite Image Segmentation",d:"Segment land use from Sentinel-2 multispectral satellite images using a UNet++ with NDVI/EVI indices.",tools:"Python, PyTorch, rasterio, earthpy",skills:"Python, PyTorch, Computer Vision",diff:"Expert",cat:"Computer Vision",time:"10h",out:"Land use segmentation map",use:"Environmental monitoring",stretch:"Add change detection"},
+    {t:"Adaptive Computation Time RNN",d:"Implement Adaptive Computation Time (ACT) for RNNs to dynamically allocate compute per timestep.",tools:"Python, PyTorch",skills:"Python, PyTorch",diff:"Expert",cat:"Generative AI",time:"8h",out:"ACT-RNN implementation",use:"Efficient sequential models",stretch:"Apply to code generation"},
+    {t:"Geometric Deep Learning for Molecules",d:"Predict molecular properties from graph representations using Equivariant Graph Neural Networks (EGNN).",tools:"Python, PyTorch Geometric, RDKit",skills:"Python, PyTorch, Feature Engineering",diff:"Expert",cat:"Tabular ML",time:"10h",out:"Molecular property predictor",use:"Drug discovery acceleration",stretch:"Add 3D conformation input"},
+    {t:"Retrieval-Augmented Code Generation",d:"Build a code generation system that retrieves similar code examples from a vector DB before generating.",tools:"Python, Qdrant, HuggingFace, FastAPI",skills:"Python, NLP, AI Agents, FastAPI",diff:"Expert",cat:"AI Agents",time:"7h",out:"RAG code generation API",use:"AI coding assistants",stretch:"Add execution verification"},
+    {t:"Differentiable Rendering for Inverse Graphics",d:"Recover 3D shape parameters from 2D images using differentiable rendering (nvdiffrast) and gradient descent.",tools:"Python, nvdiffrast, PyTorch",skills:"Python, PyTorch, Computer Vision",diff:"Expert",cat:"Computer Vision",time:"12h",out:"Inverse rendering demo",use:"3D asset generation",stretch:"Add texture optimization"},
+    {t:"LLM Red Teaming Automation",d:"Build an automated red teaming system that generates adversarial prompts to probe LLM safety boundaries.",tools:"Python, LangChain, Ollama",skills:"Python, Prompt Engineering, AI Agents",diff:"Expert",cat:"AI Agents",time:"7h",out:"Red team attack taxonomy + results",use:"LLM safety evaluation",stretch:"Add classifier judge"},
+    {t:"Neuromorphic Edge Inference Chip Sim",d:"Simulate a spiking neural network running on Intel Loihi-2 using Lava framework for ultra-low latency inference.",tools:"Python, Lava, Intel Loihi SDK",skills:"Python, Edge AI",diff:"Expert",cat:"Edge AI",time:"12h",out:"Neuromorphic inference simulation",use:"Ultra-low power AI chips",stretch:"Add plasticity rules"},
+    {t:"Cross-Lingual Transfer Learning",d:"Fine-tune mBERT for NER on English and zero-shot transfer to 5 languages without any target language labels.",tools:"Python, HuggingFace, PyTorch",skills:"Python, PyTorch, NLP",diff:"Expert",cat:"NLP",time:"8h",out:"Cross-lingual NER system",use:"Global NLP applications",stretch:"Compare with XLM-R"},
+    {t:"Compositional Generalization Test",d:"Design a SCAN-style compositional generalization benchmark and evaluate an LLM's systematic reasoning.",tools:"Python, Ollama, Pandas",skills:"Python, NLP, Prompt Engineering",diff:"Expert",cat:"NLP",time:"6h",out:"Compositional benchmark + analysis",use:"LLM reasoning evaluation",stretch:"Add symbolic hybrid"},
+    {t:"Streaming Attention-Free LM",d:"Implement an RWKV-based attention-free language model for efficient constant-memory sequence generation.",tools:"Python, RWKV, PyTorch",skills:"Python, PyTorch",diff:"Expert",cat:"Generative AI",time:"10h",out:"RWKV inference demo",use:"Edge language models",stretch:"Fine-tune for domain"},
+    {t:"Multi-Task Learning with Task Routing",d:"Train a single network on 5 NLP tasks simultaneously using task-conditioned routing layers and soft parameter sharing.",tools:"Python, PyTorch, HuggingFace",skills:"Python, PyTorch, NLP",diff:"Expert",cat:"NLP",time:"9h",out:"Multi-task model + per-task metrics",use:"Efficient NLP deployment",stretch:"Add gradient surgery"},
+    {t:"Formal Verification of ML Policy",d:"Verify safety constraints of a RL control policy using interval bound propagation and abstract interpretation.",tools:"Python, PyTorch, auto_LiRPA",skills:"Python, PyTorch, Reinforcement Learning",diff:"Expert",cat:"Reinforcement Learning",time:"10h",out:"Verified safety certificates",use:"Safety-critical control systems",stretch:"Add MILP verification"},
+    {t:"Generative World Simulator",d:"Train a video prediction model (RSSM) that simulates environment dynamics from initial state + actions.",tools:"Python, PyTorch, Gymnasium",skills:"Python, PyTorch, Reinforcement Learning, Generative AI",diff:"Expert",cat:"Generative AI",time:"12h",out:"World simulator + rollout demo",use:"Model-based RL",stretch:"Add stochastic latents"},
+    {t:"Secure Multi-Party ML Inference",d:"Run neural network inference across 3 parties without any party seeing the model weights using HE-based MPC.",tools:"Python, TenSEAL, PyTorch",skills:"Python, PyTorch, MLOps",diff:"Expert",cat:"MLOps",time:"12h",out:"MPC inference demo",use:"Privacy-preserving AI services",stretch:"Add threshold CKKS"},
+    {t:"AI-Powered Trading Strategy Backtest",d:"Build an LLM-guided trading agent that generates signal hypotheses, backtests them, and selects the Sharpe-optimal portfolio.",tools:"Python, Ollama, Backtrader, Pandas",skills:"Python, Pandas, Time Series, Prompt Engineering",diff:"Expert",cat:"Time Series",time:"10h",out:"AI trading strategy backtest report",use:"Quantitative finance tools",stretch:"Add regime detection"},
+    {t:"Topology-Aware Graph Transformer",d:"Build a graph transformer that incorporates topological features (persistent homology) for molecular property prediction.",tools:"Python, PyTorch Geometric, gudhi",skills:"Python, PyTorch, Feature Engineering",diff:"Expert",cat:"Tabular ML",time:"12h",out:"Topology-aware GNN",use:"Computational chemistry",stretch:"Add persistence images"},
+    {t:"Meta-Learning with MAML",d:"Implement Model-Agnostic Meta-Learning (MAML) for few-shot classification on Omniglot. Track inner-loop convergence.",tools:"Python, learn2learn, PyTorch",skills:"Python, PyTorch",diff:"Expert",cat:"Computer Vision",time:"10h",out:"MAML few-shot classifier",use:"Low-resource ML adaptation",stretch:"Add ANIL variant"},
+
+    // ── DAYS 221-270: SENIOR PRACTITIONER ────────────────────
+    {t:"LLM Inference Optimization Suite",d:"Apply KV cache quantization, weight tying, and continuous batching to serve a 13B LLM at 200+ tokens/s.",tools:"Python, vLLM, PyTorch, CUDA",skills:"Python, PyTorch, MLOps",diff:"Expert",cat:"MLOps",time:"10h",out:"Optimized inference server benchmark",use:"Cost-efficient LLM serving",stretch:"Add chunked prefill"},
+    {t:"Autonomous Robot Navigation RL",d:"Train a mobile robot to navigate to goals in a dynamic obstacle environment using PPO + depth camera observations.",tools:"Python, Isaac Gym, PyTorch",skills:"Python, PyTorch, Reinforcement Learning",diff:"Expert",cat:"Reinforcement Learning",time:"12h",out:"Navigation policy + success rate",use:"Warehouse automation",stretch:"Add sim-to-real transfer"},
+    {t:"Disentangled VAE for Data Exploration",d:"Train a β-TVAE on structured data to learn disentangled latent dimensions. Visualize traversals.",tools:"Python, PyTorch, Matplotlib",skills:"Python, PyTorch, Generative AI",diff:"Expert",cat:"Generative AI",time:"8h",out:"Disentangled VAE + traversal plots",use:"Scientific data exploration",stretch:"Add InfoGAN comparison"},
+    {t:"Scalable Data Lakehouse with Delta Lake",d:"Build an ML feature lakehouse on Delta Lake with ACID transactions, schema evolution, and time travel queries.",tools:"Python, Delta Lake, PySpark, Pandas",skills:"Python, Data Engineering, SQL",diff:"Expert",cat:"Data Engineering",time:"10h",out:"Delta Lake feature store",use:"Enterprise data platforms",stretch:"Add Z-order clustering"},
+    {t:"Cross-Modal Generation (Text→3D)",d:"Generate 3D mesh assets from text descriptions using DreamFusion's score distillation sampling technique.",tools:"Python, PyTorch, diffusers, Trimesh",skills:"Python, PyTorch, Generative AI",diff:"Expert",cat:"Generative AI",time:"14h",out:"Text-to-3D mesh pipeline",use:"Game asset generation",stretch:"Add texture generation"},
+    {t:"Uncertainty Quantification for DL",d:"Compare deep ensembles, MC Dropout, and SWAG for uncertainty estimation on out-of-distribution medical images.",tools:"Python, PyTorch, laplace-torch",skills:"Python, PyTorch, Feature Engineering",diff:"Expert",cat:"Computer Vision",time:"9h",out:"UQ benchmark comparison report",use:"Safety-critical AI systems",stretch:"Add conformal wrapper"},
+    {t:"Graph-Based Fraud Detection Network",d:"Build a heterogeneous GNN that models transaction graphs to detect fraud rings using a message-passing framework.",tools:"Python, PyTorch Geometric, Pandas",skills:"Python, PyTorch, Data Engineering",diff:"Expert",cat:"Tabular ML",time:"10h",out:"Graph fraud detector + precision/recall",use:"Financial crime prevention",stretch:"Add temporal edge features"},
+    {t:"Self-Correction LLM Pipeline",d:"Build an iterative self-correction loop where an LLM critiques and refines its own code outputs until tests pass.",tools:"Python, LangGraph, Ollama, pytest",skills:"Python, AI Agents, Prompt Engineering",diff:"Expert",cat:"AI Agents",time:"7h",out:"Self-correcting code generator",use:"Autonomous software development",stretch:"Add test generation"},
+    {t:"Biometric Keystroke Authentication",d:"Authenticate users from typing rhythm patterns using a Siamese network trained on keystroke dynamics.",tools:"Python, PyTorch, Pandas",skills:"Python, PyTorch, Feature Engineering",diff:"Expert",cat:"Computer Vision",time:"8h",out:"Keystroke authentication system",use:"Continuous authentication",stretch:"Add adversarial robustness"},
+    {t:"Knowledge Distillation at Scale",d:"Distill a 70B LLM into a 7B student using progressive layer-wise distillation with intermediate representations.",tools:"Python, HuggingFace, PyTorch",skills:"Python, PyTorch",diff:"Expert",cat:"Generative AI",time:"14h",out:"Distilled student model + benchmark",use:"Efficient LLM deployment",stretch:"Add logit correction"},
+    {t:"Real-Time Sports Analytics",d:"Build a CV pipeline that tracks players, ball, and events in broadcast football video using YOLOv10 + tracking.",tools:"Python, YOLOv10, ByteTrack, OpenCV",skills:"Python, PyTorch, Computer Vision",diff:"Expert",cat:"Computer Vision",time:"10h",out:"Sports analytics pipeline + heatmaps",use:"Professional sports analytics",stretch:"Add tactical formation detection"},
+    {t:"Automated ML Paper Replication",d:"Build an LLM agent that reads an arXiv paper, extracts the algorithm, writes PyTorch code, and runs experiments.",tools:"Python, LangGraph, Ollama, PyTorch",skills:"Python, AI Agents, PyTorch, Prompt Engineering",diff:"Expert",cat:"AI Agents",time:"10h",out:"Auto paper replication agent",use:"Research acceleration tools",stretch:"Add hyperparameter search"},
+    {t:"Extreme Classification with AnnANN",d:"Build a million-class text classifier using Approximate Nearest Neighbor-based ANN loss for product catalog.",tools:"Python, PyTorch, HuggingFace, FAISS",skills:"Python, PyTorch, NLP",diff:"Expert",cat:"NLP",time:"12h",out:"Extreme multilabel classifier",use:"E-commerce product discovery",stretch:"Add ANNS beam search"},
+    {t:"ML System Design Interview Simulator",d:"Build an LLM-powered mock interviewer that asks ML system design questions and evaluates answers with rubrics.",tools:"Python, LangGraph, Ollama, FastAPI",skills:"Python, AI Agents, Prompt Engineering, FastAPI",diff:"Expert",cat:"AI Agents",time:"8h",out:"ML interview simulator app",use:"ML career preparation",stretch:"Add voice interview mode"},
+    {t:"Climate Model Downscaling with ML",d:"Use a super-resolution ML model to downscale coarse climate model outputs to 1km spatial resolution.",tools:"Python, PyTorch, xarray, netCDF4",skills:"Python, PyTorch, Time Series",diff:"Expert",cat:"Time Series",time:"10h",out:"Downscaled climate map + metrics",use:"Climate impact assessment",stretch:"Add uncertainty quantification"},
+    {t:"Transformer Memory Efficient Attention",d:"Implement memory-efficient attention using XFormers and benchmark memory usage against standard attention.",tools:"Python, xformers, PyTorch, CUDA",skills:"Python, PyTorch, Edge AI",diff:"Expert",cat:"Edge AI",time:"9h",out:"Memory-efficient attention benchmark",use:"Large model training",stretch:"Add FlashAttention comparison"},
+    {t:"Probabilistic Forecasting Ensemble",d:"Build a neural probabilistic forecasting ensemble combining TFT, N-BEATS, and DeepAR with conformal intervals.",tools:"Python, NeuralForecast, PyTorch",skills:"Python, PyTorch, Time Series",diff:"Expert",cat:"Time Series",time:"10h",out:"Ensemble forecast + calibration",use:"Financial risk management",stretch:"Add online updating"},
+    {t:"Human-in-the-Loop Active RL",d:"Build an RL system where humans provide feedback on agent behavior to shape reward functions (RLHF for robots).",tools:"Python, PyTorch, Streamlit",skills:"Python, PyTorch, Reinforcement Learning",diff:"Expert",cat:"Reinforcement Learning",time:"10h",out:"RLHF robot simulation",use:"Aligned robotic systems",stretch:"Add preference learning"},
+    {t:"Zero-Shot Cross-Domain Transfer",d:"Transfer a vision model trained on satellite imagery to a new domain (medical images) using CycleGAN adaptation.",tools:"Python, PyTorch, torchvision",skills:"Python, PyTorch, Computer Vision",diff:"Expert",cat:"Computer Vision",time:"9h",out:"Cross-domain adapted model",use:"Low-resource domain adaptation",stretch:"Add DANN comparison"},
+    {t:"Autonomous Code Refactoring Agent",d:"Build an agent that reads a Python codebase, identifies code smells, refactors them, and runs tests to verify.",tools:"Python, LangGraph, Ollama, AST, pytest",skills:"Python, AI Agents, Prompt Engineering",diff:"Expert",cat:"AI Agents",time:"9h",out:"Code refactoring agent",use:"Technical debt automation",stretch:"Add complexity metrics"},
+    {t:"Neural Program Synthesis",d:"Synthesize simple programs from input-output examples using a seq2seq transformer fine-tuned on code traces.",tools:"Python, PyTorch, HuggingFace",skills:"Python, PyTorch, NLP",diff:"Expert",cat:"Generative AI",time:"12h",out:"Program synthesizer + accuracy",use:"No-code ML tools",stretch:"Add execution-guided search"},
+    {t:"Medical Multi-Organ Segmentation",d:"Segment 12 abdominal organs from CT scans using SwinUNETR with sliding window inference and TTA.",tools:"Python, MONAI, PyTorch, nibabel",skills:"Python, PyTorch, Computer Vision",diff:"Expert",cat:"Computer Vision",time:"12h",out:"Multi-organ segmentation model",use:"Surgical planning AI",stretch:"Add uncertainty maps"},
+    {t:"Token Merging for Efficient ViT",d:"Implement Token Merging (ToMe) to reduce ViT inference cost by merging similar tokens at each layer.",tools:"Python, PyTorch, timm",skills:"Python, PyTorch, Computer Vision",diff:"Expert",cat:"Edge AI",time:"7h",out:"ToMe-ViT + speedup benchmark",use:"Efficient vision deployment",stretch:"Apply to video transformers"},
+    {t:"Continual Learning Benchmark Suite",d:"Evaluate 5 continual learning algorithms (EWC, SI, PackNet, DER, CLSER) on Split-CIFAR100 benchmark.",tools:"Python, Continual-AI/Avalanche, PyTorch",skills:"Python, PyTorch",diff:"Expert",cat:"Generative AI",time:"12h",out:"Continual learning comparison report",use:"Lifelong AI systems",stretch:"Add online learning variant"},
+    {t:"Symbolic AI + Neural Hybrid Reasoner",d:"Combine a neural embedding model with a symbolic Prolog reasoner for explainable classification with rules.",tools:"Python, PyTorch, SWI-Prolog",skills:"Python, PyTorch, AI Agents",diff:"Expert",cat:"AI Agents",time:"12h",out:"Neuro-symbolic reasoner demo",use:"Explainable AI systems",stretch:"Add rule induction"},
+    {t:"LLM Judge Calibration",d:"Calibrate an LLM-as-judge system to align with human annotations using Elo ratings and pairwise comparison scaling.",tools:"Python, Ollama, Pandas, SciPy",skills:"Python, Prompt Engineering, Data Engineering",diff:"Expert",cat:"AI Agents",time:"7h",out:"Calibrated judge system + agreement metrics",use:"LLM evaluation pipelines",stretch:"Add multi-judge ensemble"},
+    {t:"Efficient Long Document Summarization",d:"Summarize 100-page documents using hierarchical chunking, map-reduce summarization, and consistency verification.",tools:"Python, LangChain, Ollama, FAISS",skills:"Python, NLP, Prompt Engineering, AI Agents",diff:"Expert",cat:"NLP",time:"6h",out:"Long document summarizer",use:"Legal/financial document processing",stretch:"Add extractive grounding"},
+    {t:"Robustness Testing with Adversarial Patches",d:"Generate physically realizable adversarial patches that fool a YOLO detector when printed and placed in a scene.",tools:"Python, PyTorch, YOLOv8",skills:"Python, PyTorch, Computer Vision",diff:"Expert",cat:"Computer Vision",time:"9h",out:"Adversarial patch + detection fooling demo",use:"AI security testing",stretch:"Add digital watermark defense"},
+    {t:"Production Model Monitoring Dashboard",d:"Build a Grafana + Prometheus model monitoring stack tracking drift, latency, error rates, and data quality.",tools:"Python, Prometheus, Grafana, FastAPI",skills:"Python, MLOps, FastAPI",diff:"Expert",cat:"MLOps",time:"8h",out:"Production monitoring dashboard",use:"Enterprise ML operations",stretch:"Add automated alerting"},
+    {t:"Temporal Knowledge Graph Embedding",d:"Embed time-evolving knowledge graph facts using a temporal GNN that encodes entity evolution over time.",tools:"Python, PyTorch Geometric, Pandas",skills:"Python, PyTorch, Data Engineering",diff:"Expert",cat:"Data Engineering",time:"10h",out:"Temporal KG embedding model",use:"Dynamic knowledge bases",stretch:"Add link prediction"},
+
+    // ── DAYS 271-330: PINNACLE PROJECTS ──────────────────────
+    {t:"Autonomous Scientific Experiment Agent",d:"Build an AI scientist agent that designs experiments, queries simulators, analyzes results, and forms hypotheses.",tools:"Python, LangGraph, Ollama, SymPy",skills:"Python, AI Agents, Prompt Engineering",diff:"Expert",cat:"AI Agents",time:"14h",out:"AI scientist agent demo",use:"Automated scientific discovery",stretch:"Add Bayesian experiment design"},
+    {t:"LLM-Powered Code Interpreter",d:"Build a sandboxed code interpreter powered by an LLM that writes and executes code to answer data questions.",tools:"Python, LangGraph, Docker, Ollama",skills:"Python, AI Agents, Docker, Prompt Engineering",diff:"Expert",cat:"AI Agents",time:"10h",out:"LLM code interpreter with sandbox",use:"Data analysis automation",stretch:"Add chart generation"},
+    {t:"Real-Time Sign Language Recognition",d:"Recognize American Sign Language in real time from webcam using 3D CNN on hand landmark sequences.",tools:"Python, MediaPipe, PyTorch, OpenCV",skills:"Python, PyTorch, Computer Vision",diff:"Expert",cat:"Computer Vision",time:"10h",out:"Real-time ASL recognition demo",use:"Accessibility communication tools",stretch:"Add fingerspelling"},
+    {t:"Graph Retrieval-Augmented Generation",d:"Build a Graph-RAG system that retrieves relevant subgraphs from a knowledge graph to ground LLM answers.",tools:"Python, Neo4j, LangGraph, Ollama",skills:"Python, AI Agents, Data Engineering, Prompt Engineering",diff:"Expert",cat:"AI Agents",time:"10h",out:"Graph-RAG Q&A system",use:"Enterprise knowledge AI",stretch:"Add multi-hop reasoning"},
+    {t:"Learned Similarity Search Index",d:"Train a learned index structure (SPANN-style) that adapts to data distribution for faster ANN search.",tools:"Python, PyTorch, FAISS, NumPy",skills:"Python, PyTorch, Data Engineering",diff:"Expert",cat:"Data Engineering",time:"12h",out:"Learned ANN index + recall@k benchmark",use:"Billion-scale search systems",stretch:"Add OOD query handling"},
+    {t:"Full-Stack AI SaaS Application",d:"Build a production-ready AI SaaS app with authentication, billing integration, streaming LLM, and admin dashboard.",tools:"Python, FastAPI, PostgreSQL, Stripe, React",skills:"Python, FastAPI, Cloud Deployment, MLOps",diff:"Expert",cat:"MLOps",time:"20h",out:"Deployed SaaS application",use:"AI product development",stretch:"Add multitenancy"},
+    {t:"Neural Circuit Breaker for LLMs",d:"Implement an automated circuit breaker that detects LLM failure modes and reroutes to fallback models.",tools:"Python, FastAPI, Redis, Prometheus",skills:"Python, FastAPI, MLOps",diff:"Expert",cat:"MLOps",time:"8h",out:"LLM circuit breaker middleware",use:"Reliable LLM production systems",stretch:"Add graceful degradation"},
+    {t:"Inverse Reinforcement Learning",d:"Recover a reward function from expert demonstrations using MaxEntropy IRL on a grid-world environment.",tools:"Python, PyTorch, NumPy",skills:"Python, PyTorch, Reinforcement Learning",diff:"Expert",cat:"Reinforcement Learning",time:"10h",out:"Recovered reward function + policy",use:"Autonomous behavior modeling",stretch:"Add GAIL comparison"},
+    {t:"Photorealistic Face Reenactment",d:"Animate a face portrait video using motion vectors from a driving video with a keypoint-based generator.",tools:"Python, PyTorch, FOMM",skills:"Python, PyTorch, Computer Vision, Generative AI",diff:"Expert",cat:"Generative AI",time:"12h",out:"Animated face video",use:"Virtual avatar systems",stretch:"Add identity preservation"},
+    {t:"Persistent Memory Agent",d:"Build an LLM agent with a structured long-term memory system that stores, retrieves, and updates episodic memories.",tools:"Python, LangGraph, Qdrant, Ollama",skills:"Python, AI Agents, Data Engineering, Prompt Engineering",diff:"Expert",cat:"AI Agents",time:"10h",out:"Memory-augmented agent demo",use:"Personalized AI assistants",stretch:"Add memory compression"},
+    {t:"Distributed RL at Scale with Ray",d:"Scale PPO training across a 32-core Ray cluster on a complex continuous control task (Humanoid-v4).",tools:"Python, Ray RLlib, PyTorch",skills:"Python, PyTorch, Reinforcement Learning, Cloud Deployment",diff:"Expert",cat:"Reinforcement Learning",time:"14h",out:"Scalable RL training setup",use:"Large-scale RL research",stretch:"Add IMPALA variant"},
+    {t:"End-to-End Self-Driving Perception Stack",d:"Build a multi-task perception stack (detection, segmentation, depth, lane detection) for autonomous driving.",tools:"Python, PyTorch, nuScenes, OpenCV",skills:"Python, PyTorch, Computer Vision, Feature Engineering",diff:"Expert",cat:"Computer Vision",time:"16h",out:"Multi-task AV perception system",use:"Autonomous vehicle development",stretch:"Add sensor fusion"},
+    {t:"Differentiable Physics Simulator",d:"Build a differentiable rigid body simulator using Warp and optimize robot joint trajectories through simulation.",tools:"Python, NVIDIA Warp, PyTorch",skills:"Python, PyTorch, Reinforcement Learning",diff:"Expert",cat:"Reinforcement Learning",time:"14h",out:"Differentiable physics optimizer",use:"Robot trajectory optimization",stretch:"Add deformable objects"},
+    {t:"Multimodal Foundation Model Probe",d:"Probe the internal representations of a vision-language model to understand how it aligns visual and text concepts.",tools:"Python, PyTorch, CLIP, LLaVA",skills:"Python, PyTorch, Computer Vision, NLP",diff:"Expert",cat:"Computer Vision",time:"10h",out:"VLM representation analysis report",use:"AI interpretability research",stretch:"Add causal probing"},
+    {t:"Autonomous Testing Agent for ML",d:"Build an agent that generates unit tests, integration tests, and adversarial inputs for any ML model API.",tools:"Python, LangGraph, Ollama, pytest",skills:"Python, AI Agents, Prompt Engineering",diff:"Expert",cat:"AI Agents",time:"9h",out:"Automated ML testing agent",use:"ML quality assurance",stretch:"Add mutation testing"},
+    {t:"Audio Generative Model (AudioCraft)",d:"Fine-tune Meta's AudioCraft on a specific music genre and generate 30-second music clips.",tools:"Python, AudioCraft, PyTorch, CUDA",skills:"Python, PyTorch, Generative AI",diff:"Expert",cat:"Generative AI",time:"12h",out:"Domain-specific music generator",use:"AI music composition tools",stretch:"Add text-to-sound effects"},
+    {t:"Production A/B Testing for ML",d:"Build a rigorous ML A/B testing framework with holdout sets, guardrail metrics, and sequential testing.",tools:"Python, FastAPI, Pandas, SciPy",skills:"Python, FastAPI, MLOps, Data Engineering",diff:"Expert",cat:"MLOps",time:"9h",out:"ML A/B testing platform",use:"Product ML optimization",stretch:"Add multi-armed bandit"},
+    {t:"Embodied AI with Visual Navigation",d:"Train a vision-based embodied AI agent to navigate photo-realistic indoor environments to find objects (PointNav).",tools:"Python, Habitat-Sim, PyTorch",skills:"Python, PyTorch, Reinforcement Learning, Computer Vision",diff:"Expert",cat:"Reinforcement Learning",time:"16h",out:"Embodied navigation agent",use:"Home robot research",stretch:"Add object goal navigation"},
+    {t:"Genomic Sequence Foundation Model",d:"Fine-tune a DNA language model (Nucleotide Transformer) for variant effect prediction.",tools:"Python, HuggingFace, PyTorch, Biopython",skills:"Python, PyTorch, Feature Engineering",diff:"Expert",cat:"Tabular ML",time:"12h",out:"Genomic variant effect predictor",use:"Precision medicine research",stretch:"Add functional annotation"},
+    {t:"Diffusion Model Guidance Techniques",d:"Implement classifier guidance, classifier-free guidance, and DDIM inversion on Stable Diffusion. Compare quality.",tools:"Python, diffusers, PyTorch, CUDA",skills:"Python, PyTorch, Generative AI",diff:"Expert",cat:"Generative AI",time:"10h",out:"Guided generation comparison",use:"AI creative tools",stretch:"Add DreamBooth personalization"},
+    {t:"Streaming Multi-Agent Coordination",d:"Build a multi-agent system where LLM agents coordinate asynchronously on a complex data pipeline task.",tools:"Python, LangGraph, FastAPI, Redis",skills:"Python, AI Agents, Prompt Engineering, MLOps",diff:"Expert",cat:"AI Agents",time:"12h",out:"Async multi-agent orchestration",use:"Autonomous workflow automation",stretch:"Add agent capability negotiation"},
+    {t:"End-to-End Speech Translation",d:"Build a direct speech-to-speech translation system (En→Es) using SeamlessM4T without text intermediate.",tools:"Python, SeamlessM4T, FastAPI",skills:"Python, NLP, FastAPI",diff:"Expert",cat:"NLP",time:"10h",out:"Real-time speech translation demo",use:"Real-time multilingual communication",stretch:"Add voice cloning"},
+    {t:"Neuro-Symbolic Planning Agent",d:"Build an AI planner that combines LLM reasoning with PDDL planning to solve multi-step logistics tasks.",tools:"Python, Ollama, pyperplan",skills:"Python, AI Agents, Prompt Engineering",diff:"Expert",cat:"AI Agents",time:"10h",out:"PDDL-LLM hybrid planner",use:"Autonomous task planning",stretch:"Add hierarchical task networks"},
+    {t:"Stochastic Weight Averaging for LLMs",d:"Apply SWAG and SWA-Gaussian to LLM fine-tuning to build a Bayesian ensemble for calibrated text generation.",tools:"Python, HuggingFace, PyTorch",skills:"Python, PyTorch",diff:"Expert",cat:"Generative AI",time:"9h",out:"Bayesian LLM ensemble",use:"Reliable text generation",stretch:"Add temperature annealing"},
+    {t:"AI-Accelerated Drug Discovery",d:"Predict binding affinity of drug candidates to a target protein using GNN + molecular docking features.",tools:"Python, RDKit, PyTorch Geometric, Pandas",skills:"Python, PyTorch, Feature Engineering",diff:"Expert",cat:"Tabular ML",time:"12h",out:"Drug affinity predictor + ROC-AUC",use:"Pharmaceutical AI",stretch:"Add ADMET prediction"},
+    {t:"Cooperative Perception in AV",d:"Simulate vehicle-to-vehicle cooperative perception where multiple agents share compressed features for joint detection.",tools:"Python, PyTorch, OpenCOOD",skills:"Python, PyTorch, Computer Vision, Data Engineering",diff:"Expert",cat:"Computer Vision",time:"14h",out:"Cooperative detection system",use:"Connected autonomous vehicles",stretch:"Add bandwidth constraints"},
+
+    // ── DAYS 331-365: CAPSTONE PROJECTS ──────────────────────
+    {t:"Foundation Model for Time Series",d:"Pre-train a GPT-style time series foundation model on 10M synthetic trajectories with patching tokenization.",tools:"Python, PyTorch, Pandas, NumPy",skills:"Python, PyTorch, Time Series",diff:"Expert",cat:"Time Series",time:"16h",out:"Pre-trained time series FM",use:"Universal forecasting system",stretch:"Zero-shot benchmark on M5"},
+    {t:"Personal AI Research Assistant",d:"Build a complete AI research assistant with memory, web search, paper retrieval, code execution, and LaTeX writing.",tools:"Python, LangGraph, Ollama, Playwright, arxiv",skills:"Python, AI Agents, Prompt Engineering, Data Engineering",diff:"Expert",cat:"AI Agents",time:"14h",out:"Full research AI assistant",use:"Academic research acceleration",stretch:"Add multi-modal inputs"},
+    {t:"Agentic Software Engineer",d:"Build a software engineering agent that takes a feature request, writes code, tests it, fixes bugs, and opens a PR.",tools:"Python, LangGraph, Ollama, Git, pytest",skills:"Python, AI Agents, Prompt Engineering",diff:"Expert",cat:"AI Agents",time:"14h",out:"Autonomous PR-generating agent",use:"AI software development",stretch:"Add code review agent"},
+    {t:"3D Avatar Generation from Photos",d:"Generate an animatable 3D avatar from 3 portrait photos using PIFu depth estimation and neural rendering.",tools:"Python, PIFu, PyTorch, OpenGL",skills:"Python, PyTorch, Computer Vision, Generative AI",diff:"Expert",cat:"Computer Vision",time:"14h",out:"3D animated avatar from photos",use:"Gaming and VR avatars",stretch:"Add cloth simulation"},
+    {t:"Lifelong Learning Robot Arm",d:"Train a robotic arm to continually learn new manipulation skills without forgetting old ones using PackNet + ER.",tools:"Python, PyTorch, MuJoCo",skills:"Python, PyTorch, Reinforcement Learning",diff:"Expert",cat:"Reinforcement Learning",time:"16h",out:"Continual robot arm policy",use:"Adaptive manufacturing robots",stretch:"Add task discovery"},
+    {t:"Generalist Agent with Tool Use",d:"Build a generalist LLM agent with 15+ tools (search, code, math, calendar, browser) orchestrated via LangGraph.",tools:"Python, LangGraph, Ollama, Playwright",skills:"Python, AI Agents, Prompt Engineering, FastAPI",diff:"Expert",cat:"AI Agents",time:"16h",out:"Multi-tool generalist agent",use:"Personal AI assistant",stretch:"Add long-term planning"},
+    {t:"Enterprise ML Platform Architecture",d:"Design and implement a scalable ML platform supporting 50+ data scientists with CI/CD, feature store, and governance.",tools:"Python, Kubernetes, Airflow, MLflow, Feast",skills:"Python, MLOps, Cloud Deployment, Docker",diff:"Expert",cat:"MLOps",time:"20h",out:"Enterprise ML platform blueprint",use:"ML infrastructure at scale",stretch:"Add cost attribution"},
+    {t:"Causal Foundation Model",d:"Train a causal language model that learns structural causal models from observational + interventional data.",tools:"Python, PyTorch, DoWhy, Pandas",skills:"Python, PyTorch, Feature Engineering",diff:"Expert",cat:"Generative AI",time:"16h",out:"Causal generative model",use:"Counterfactual reasoning AI",stretch:"Add identifiability checker"},
+    {t:"Universal Biomedical AI System",d:"Build a multi-task biomedical AI system handling diagnosis, drug interaction, clinical NLP, and imaging.",tools:"Python, PyTorch, HuggingFace, MONAI",skills:"Python, PyTorch, NLP, Computer Vision",diff:"Expert",cat:"Computer Vision",time:"20h",out:"Unified biomedical AI system",use:"Clinical AI platform",stretch:"Add regulatory compliance"},
+    {t:"ML Year-End Retrospective Agent",d:"Build an AI agent that analyzes your 365-day ML journey, identifies skill gaps, and generates a personalized 2027 learning roadmap.",tools:"Python, LangGraph, Ollama, Pandas",skills:"Python, AI Agents, Prompt Engineering, Data Engineering",diff:"Expert",cat:"AI Agents",time:"8h",out:"Personalized AI learning roadmap",use:"Continuous ML education",stretch:"Add skill certification pathway"},
+  ];
+
+  // Fill remaining days deterministically to reach exactly 365
+  const extraProjects = [
+    {t:"AutoML with FLAML",d:"Use FLAML to automatically search ML pipelines for tabular classification. Compare to manual tuning.",tools:"Python, FLAML, Pandas",skills:"Python, Pandas, Feature Engineering",diff:"Intermediate",cat:"Tabular ML",time:"3h",out:"AutoML pipeline + leaderboard",use:"Rapid prototyping",stretch:"Export best model as ONNX"},
+    {t:"Text Classification with SetFit",d:"Few-shot text classification with 8 examples per class using sentence transformers + logistic probe (SetFit).",tools:"Python, SetFit, HuggingFace",skills:"Python, NLP",diff:"Intermediate",cat:"NLP",time:"3h",out:"Few-shot classifier",use:"Rapid domain adaptation",stretch:"Compare with GPT-4 few-shot"},
+    {t:"Satellite Change Detection",d:"Detect land-use changes between two satellite image epochs using a Siamese U-Net architecture.",tools:"Python, PyTorch, rasterio",skills:"Python, PyTorch, Computer Vision",diff:"Advanced",cat:"Computer Vision",time:"7h",out:"Change detection map",use:"Environmental monitoring",stretch:"Add semantic change detection"},
+    {t:"Streaming Aggregations with Flink",d:"Build a real-time feature engineering pipeline using Apache Flink for ML model serving.",tools:"Python, PyFlink, Kafka",skills:"Python, Data Engineering",diff:"Advanced",cat:"Data Engineering",time:"6h",out:"Real-time feature pipeline",use:"Real-time ML systems",stretch:"Add watermarking"},
+    {t:"LLM Function Calling API",d:"Build a structured function calling interface for a local LLM using JSON schema tool definitions.",tools:"Python, Ollama, FastAPI",skills:"Python, Prompt Engineering, FastAPI",diff:"Intermediate",cat:"AI Agents",time:"4h",out:"Function calling API",use:"LLM-powered workflows",stretch:"Add parallel function calls"},
+    {t:"Probabilistic Neural Networks",d:"Implement a Bayesian neural network with variational inference for uncertainty-aware classification.",tools:"Python, PyTorch, Pyro",skills:"Python, PyTorch",diff:"Advanced",cat:"Tabular ML",time:"6h",out:"Bayesian NN + uncertainty viz",use:"High-stakes decision support",stretch:"Add MC Dropout comparison"},
+    {t:"NLP Pipeline Optimization",d:"Optimize a HuggingFace NLP inference pipeline using batching, caching, and ONNX export for 10x speedup.",tools:"Python, HuggingFace, ONNX",skills:"Python, NLP, MLOps",diff:"Intermediate",cat:"MLOps",time:"4h",out:"Optimized NLP inference pipeline",use:"Cost-efficient NLP serving",stretch:"Add quantization"},
+    {t:"Pose-Based Emotion Recognition",d:"Infer emotional states from body pose sequences using a GRU model on MediaPipe full-body landmarks.",tools:"Python, MediaPipe, PyTorch",skills:"Python, PyTorch, Computer Vision",diff:"Intermediate",cat:"Computer Vision",time:"4h",out:"Pose emotion classifier",use:"Social robotics",stretch:"Add facial fusion"},
+    {t:"SQL Query Performance Predictor",d:"Predict SQL query execution time from query plan features using gradient boosting.",tools:"Python, PostgreSQL, LightGBM, Pandas",skills:"Python, SQL, Data Engineering, Feature Engineering",diff:"Intermediate",cat:"Data Engineering",time:"4h",out:"Query time predictor",use:"Database query optimization",stretch:"Add plan graph features"},
+    {t:"Text Difficulty Scorer",d:"Score reading complexity of text passages using linguistic features (Flesch-Kincaid, sentence embeddings).",tools:"Python, spaCy, HuggingFace, Pandas",skills:"Python, NLP, Feature Engineering",diff:"Beginner",cat:"NLP",time:"2h",out:"Difficulty scorer API",use:"Educational content tools",stretch:"Add grade level alignment"},
+    {t:"Edge Object Detection with NCNN",d:"Deploy YOLOv8 on mobile using the NCNN framework with custom preprocessing for Android.",tools:"Python, YOLOv8, NCNN, Android SDK",skills:"Python, Edge AI, Computer Vision",diff:"Advanced",cat:"Edge AI",time:"7h",out:"Android object detection app",use:"Mobile AI applications",stretch:"Add NPU acceleration"},
+    {t:"Social Media Trend Forecaster",d:"Forecast viral potential of social media posts using engagement time series features and XGBoost.",tools:"Python, XGBoost, Pandas, Matplotlib",skills:"Python, Pandas, Time Series, Feature Engineering",diff:"Intermediate",cat:"Time Series",time:"4h",out:"Virality predictor + feature importance",use:"Social media analytics",stretch:"Add NLP sentiment features"},
+    {t:"Reinforcement Learning for Trading",d:"Train a DRL agent for cryptocurrency trading using PPO with portfolio allocation action space.",tools:"Python, FinRL, PyTorch",skills:"Python, PyTorch, Reinforcement Learning, Time Series",diff:"Advanced",cat:"Reinforcement Learning",time:"7h",out:"Trading policy + backtesting results",use:"Algorithmic trading research",stretch:"Add transaction cost model"},
+    {t:"Image Captioning with BLIP",d:"Fine-tune BLIP-2 image captioning on a domain-specific image dataset (medical or satellite).",tools:"Python, HuggingFace, PyTorch",skills:"Python, PyTorch, Computer Vision, NLP",diff:"Advanced",cat:"Computer Vision",time:"6h",out:"Image captioning system",use:"Accessibility and document search",stretch:"Add VQA capability"},
+    {t:"Data Version Control with DVC",d:"Set up DVC for a complete ML project with data versioning, model versioning, and pipeline reproducibility.",tools:"Python, DVC, Git, Pandas",skills:"Python, MLOps, Data Engineering",diff:"Intermediate",cat:"MLOps",time:"3h",out:"Fully versioned ML project",use:"ML reproducibility",stretch:"Add remote S3 storage"},
+    {t:"Conditional Text Generation",d:"Fine-tune a GPT-2 model for controlled text generation with sentiment and topic conditioning using prefix tuning.",tools:"Python, HuggingFace, PyTorch",skills:"Python, PyTorch, NLP, Prompt Engineering",diff:"Advanced",cat:"Generative AI",time:"6h",out:"Controlled text generator",use:"Content personalization",stretch:"Add PPLM comparison"},
+    {t:"Tabular Self-Supervised Learning",d:"Apply SCARF contrastive learning to learn rich representations from tabular data without labels.",tools:"Python, PyTorch, Pandas",skills:"Python, PyTorch, Feature Engineering",diff:"Advanced",cat:"Tabular ML",time:"5h",out:"Self-supervised tabular encoder",use:"Semi-supervised ML",stretch:"Add VIME comparison"},
+    {t:"Multilingual Embeddings Benchmark",d:"Benchmark 5 multilingual embedding models on semantic similarity tasks across 10 languages.",tools:"Python, SentenceTransformers, Pandas",skills:"Python, NLP, Data Engineering",diff:"Intermediate",cat:"NLP",time:"4h",out:"Multilingual embedding benchmark",use:"Global NLP systems",stretch:"Add cross-lingual retrieval"},
+    {t:"Deployment Blue-Green Strategy",d:"Implement blue-green deployment for an ML API with traffic shifting, rollback, and health monitoring.",tools:"Python, FastAPI, Docker, Nginx",skills:"Python, FastAPI, Docker, MLOps",diff:"Advanced",cat:"MLOps",time:"5h",out:"Blue-green ML deployment demo",use:"Zero-downtime model updates",stretch:"Add canary routing"},
+    {t:"EEG Signal Classification",d:"Classify motor imagery EEG signals for brain-computer interface applications using EEGNet architecture.",tools:"Python, MNE, PyTorch",skills:"Python, PyTorch, Feature Engineering",diff:"Advanced",cat:"Edge AI",time:"7h",out:"BCI signal classifier",use:"Neurological interface devices",stretch:"Add real-time inference"},
+    {t:"Automated Report Generation",d:"Build an LLM pipeline that converts structured data (SQL query results) into professional narrative reports.",tools:"Python, Ollama, Pandas, Jinja2",skills:"Python, Prompt Engineering, Data Engineering",diff:"Intermediate",cat:"AI Agents",time:"4h",out:"Automated report generator",use:"Business intelligence automation",stretch:"Add chart generation"},
+    {t:"Sparse Reward RL Curriculum",d:"Design an automatic curriculum learning system for sparse-reward RL that progressively increases task difficulty.",tools:"Python, PyTorch, Gymnasium",skills:"Python, PyTorch, Reinforcement Learning",diff:"Expert",cat:"Reinforcement Learning",time:"9h",out:"Curriculum RL training system",use:"Complex task learning",stretch:"Add goal-conditioned policy"},
+    {t:"Semantic Image Editing with InstructPix2Pix",d:"Edit images using natural language instructions without masks using the InstructPix2Pix diffusion model.",tools:"Python, diffusers, PyTorch",skills:"Python, PyTorch, Generative AI, Prompt Engineering",diff:"Advanced",cat:"Generative AI",time:"5h",out:"Text-guided image editor",use:"AI creative tools",stretch:"Add style reference images"},
+    {t:"GraphRAG for Financial Knowledge",d:"Build a financial knowledge graph from SEC filings and use GraphRAG for analyst report generation.",tools:"Python, Neo4j, LangGraph, Ollama",skills:"Python, AI Agents, NLP, Data Engineering",diff:"Expert",cat:"AI Agents",time:"12h",out:"Financial GraphRAG system",use:"Investment research tools",stretch:"Add earnings call analysis"},
+    {t:"Time Series Anomaly Benchmark",d:"Benchmark 8 anomaly detection algorithms on the TSB-UAD benchmark across 1000+ time series.",tools:"Python, TSBench, PyTorch, Pandas",skills:"Python, PyTorch, Time Series, Data Engineering",diff:"Advanced",cat:"Time Series",time:"8h",out:"Anomaly detection benchmark report",use:"Monitoring systems comparison",stretch:"Add ensemble method"},
+    {t:"Neural Hashing for Image Retrieval",d:"Train a deep hashing network to map images to compact binary codes for billion-scale image retrieval.",tools:"Python, PyTorch, torchvision",skills:"Python, PyTorch, Computer Vision",diff:"Expert",cat:"Computer Vision",time:"8h",out:"Binary hash image retrieval system",use:"Large-scale visual search",stretch:"Add asymmetric hashing"},
+  ];
+
+  const allData = [...data];
+  let eIdx = 0;
+  while (allData.length < 365) {
+    const ep = extraProjects[eIdx % extraProjects.length];
+    allData.push({
+      t: ep.t + (eIdx >= extraProjects.length ? ` (Variant ${Math.floor(eIdx / extraProjects.length) + 1})` : ''),
+      d: ep.d, tools: ep.tools, skills: ep.skills,
+      diff: ep.diff, cat: ep.cat, time: ep.time,
+      out: ep.out, use: ep.use, stretch: ep.stretch
+    });
+    eIdx++;
+  }
+
+  return allData.slice(0, 365).map((p, i) => ({
+    day: i + 1,
+    title: p.t,
+    description: p.d,
+    tools: p.tools,
+    skills: p.skills,
+    difficulty: p.diff,
+    category: p.cat,
+    estimatedTime: p.time,
+    deliverable: p.out,
+    useCase: p.use,
+    stretch: p.stretch
+  }));
+})();
+
+/* ============================================================
+   STATE MANAGEMENT
+   ============================================================ */
+let state = {
+  completed: {},   // { dayNumber: { date, notes, rating } }
+  theme: 'light'
+};
+
+function saveState() {
+  try { localStorage.setItem('ml365_state', JSON.stringify(state)); } catch(e) {}
+}
+
+function loadState() {
+  try {
+    const s = localStorage.getItem('ml365_state');
+    if (s) state = JSON.parse(s);
+  } catch(e) {}
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+function toast(msg) {
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.getElementById('toast-container').appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+function openModal(html) {
+  document.getElementById('modal-content').innerHTML = html;
+  const overlay = document.getElementById('modal-overlay');
+  overlay.classList.add('open');
+  // Focus first interactive element
+  setTimeout(() => {
+    const box = document.getElementById('modal-box');
+    const focusable = box.querySelectorAll('button, [tabindex="0"], a, input, select, textarea');
+    if (focusable.length) focusable[0].focus();
+    // Simple focus trap
+    overlay._trapHandler = function(e) {
+      if (e.key !== 'Tab') return;
+      const els = Array.from(box.querySelectorAll('button, [tabindex="0"], a, input, select'));
+      if (!els.length) return;
+      const first = els[0], last = els[els.length - 1];
+      if (e.shiftKey) { if (document.activeElement === first) { e.preventDefault(); last.focus(); } }
+      else { if (document.activeElement === last) { e.preventDefault(); first.focus(); } }
+    };
+    overlay.addEventListener('keydown', overlay._trapHandler);
+  }, 50);
+}
+
+function closeModal() {
+  const overlay = document.getElementById('modal-overlay');
+  overlay.classList.remove('open');
+  if (overlay._trapHandler) { overlay.removeEventListener('keydown', overlay._trapHandler); overlay._trapHandler = null; }
+}
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+document.querySelectorAll('.nav-item').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const page = btn.dataset.page;
+    document.querySelectorAll('.nav-item').forEach(b => {
+      b.classList.remove('active');
+      b.removeAttribute('aria-current');
+    });
+    btn.classList.add('active');
+    btn.setAttribute('aria-current', 'page');
+    document.querySelectorAll('.page').forEach(p => {
+      p.classList.remove('active');
+      p.setAttribute('role', 'region');
+    });
+    const activePage = document.getElementById('page-' + page);
+    activePage.classList.add('active');
+    activePage.setAttribute('role', 'main');
+    window.scrollTo(0, 0);
+    if (page === 'log') renderLog();
+    if (page === 'skills') renderSkills();
+    if (page === 'home') renderHome();
+    if (page === 'categories') renderCategories();
+  });
+});
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+function getDiffClass(d) {
+  const m = { Beginner:'diff-beginner', Intermediate:'diff-intermediate', Advanced:'diff-advanced', Expert:'diff-expert' };
+  return m[d] || '';
+}
+function completedCount() { return Object.keys(state.completed).length; }
+function getCurrentDay() {
+  const start = new Date('2026-01-01');
+  const now = new Date();
+  const diff = Math.floor((now - start) / 86400000) + 1;
+  return Math.max(1, Math.min(365, diff));
+}
+
+/* ============================================================
+   HOME RENDER
+   ============================================================ */
+function renderHome() {
+  const done = completedCount();
+  const pct = Math.round((done / 365) * 100);
+  const today = getCurrentDay();
+
+  document.getElementById('stat-done').textContent = done;
+  document.getElementById('stat-pct').textContent = pct + '%';
+  document.getElementById('stat-remaining').textContent = 365 - done;
+
+  // Streak — count consecutive completed days ending at/before today
+  const completedDays = Object.keys(state.completed).map(Number).sort((a,b) => b - a);
+  let streak = 0;
+  for (let i = 0; i < completedDays.length; i++) {
+    const expected = today - streak;
+    if (completedDays[i] === expected || completedDays[i] === expected - 1) {
+      streak++;
+    } else { break; }
+  }
+  document.getElementById('stat-streak').textContent = streak;
+
+  // Year dots - use event delegation to avoid 365 individual listeners (memory leak)
+  const dots = document.getElementById('year-dots');
+  dots.innerHTML = '';
+  // Remove any previous delegated listener before adding new one
+  if (dots._dotClickHandler) dots.removeEventListener('click', dots._dotClickHandler);
+  dots._dotClickHandler = function(e) {
+    const dot = e.target.closest('.yd');
+    if (!dot) return;
+    const idx = parseInt(dot.dataset.day, 10) - 1;
+    if (!isNaN(idx)) openProjectModal(idx);
+  };
+  dots.addEventListener('click', dots._dotClickHandler);
+  if (dots._dotKeyHandler) dots.removeEventListener('keydown', dots._dotKeyHandler);
+  dots._dotKeyHandler = function(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      const dot = e.target.closest('.yd');
+      if (!dot) return;
+      const idx = parseInt(dot.dataset.day, 10) - 1;
+      if (!isNaN(idx)) openProjectModal(idx);
+    }
+  };
+  dots.addEventListener('keydown', dots._dotKeyHandler);
+
+  const frag = document.createDocumentFragment();
+  for (let i = 1; i <= 365; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'yd' + (state.completed[i] ? ' done' : '') + (i === today ? ' today' : '');
+    dot.dataset.day = i;
+    dot.setAttribute('role', 'button');
+    dot.setAttribute('tabindex', '0');
+    dot.setAttribute('aria-label', `Day ${i}: ${PROJECTS[i-1]?.title || ''}${state.completed[i] ? ' (completed)' : ''}`);
+    dot.setAttribute('title', `Day ${i}: ${PROJECTS[i-1]?.title || ''}`);
+    dot.style.cursor = 'pointer';
+    frag.appendChild(dot);
+  }
+  dots.appendChild(frag);
+  document.getElementById('year-progress-label').textContent = `Day ${today} of 365`;
+
+  // Today spotlight
+  const tp = PROJECTS[today - 1];
+  const todayHTML = `
+    <div class="today-card">
+      <div class="today-day-badge">DAY ${today} · ${tp.category}</div>
+      <div class="today-title">${tp.title}</div>
+      <div class="today-desc">${tp.description}</div>
+      <div class="today-meta">
+        <span class="today-tag">${tp.difficulty}</span>
+        <span class="today-tag">⏱ ${tp.estimatedTime}</span>
+        <span class="today-tag">🛠 ${tp.tools.split(',')[0].trim()}</span>
+      </div>
+      <button class="btn mt-2" style="background:rgba(255,255,255,0.18);color:#FFF;border:1px solid rgba(255,255,255,0.3);min-height:44px;border-radius:8px;padding:10px 20px;cursor:pointer;font-weight:700;position:relative;z-index:2;" onclick="openProjectModal(${today-1})">View Project →</button>
+    </div>`;
+  document.getElementById('today-spotlight').innerHTML = todayHTML;
+
+  // Diff chart
+  const counts = { Beginner:0, Intermediate:0, Advanced:0, Expert:0 };
+  PROJECTS.forEach(p => counts[p.difficulty]++);
+  const maxC = Math.max(...Object.values(counts));
+  const colors = { Beginner:'#1E7850', Intermediate:'#C9922A', Advanced:'#8B1A1A', Expert:'#5A1A7A' };
+  const chartEl = document.getElementById('diff-chart');
+  chartEl.innerHTML = Object.entries(counts).map(([k,v]) => `
+    <div class="diff-bar-wrap">
+      <div style="font-size:11px;font-weight:700;color:${colors[k]};margin-bottom:2px;">${v}</div>
+      <div class="diff-bar" style="height:${Math.max(4, Math.round((v/maxC)*56))}px;background:${colors[k]};"></div>
+      <div class="diff-bar-label">${k.substring(0,4)}</div>
+    </div>`).join('');
+}
+
+/* ============================================================
+   PROJECTS RENDER
+   ============================================================ */
+function renderProjectCard(p, idx) {
+  const done = !!state.completed[p.day];
+  return `<div class="project-card${done ? ' done' : ''}" role="article" aria-label="Day ${p.day}: ${p.title}">
+    <button class="pc-check" aria-label="${done ? 'Mark incomplete' : 'Mark complete'}: Day ${p.day}" onclick="toggleComplete(${p.day}, event)">
+      ${done ? '✓' : ''}
+    </button>
+    <div class="pc-day">DAY ${String(p.day).padStart(3,'0')} · ${p.category}</div>
+    <div class="pc-title">${p.title}</div>
+    <div class="pc-desc">${p.description}</div>
+    <div class="pc-footer">
+      <span class="tag ${getDiffClass(p.difficulty)}">${p.difficulty}</span>
+      <span class="tag">⏱ ${p.estimatedTime}</span>
+    </div>
+    <button class="btn btn-ghost btn-sm w-full" style="margin-top:8px;flex-shrink:0;" onclick="openProjectModal(${idx})" aria-label="View details for Day ${p.day}: ${p.title}">View Details</button>
+  </div>`;
+}
+
+let filteredProjects = [...PROJECTS];
+
+function renderProjects() {
+  const grid = document.getElementById('projects-grid');
+  const empty = document.getElementById('projects-empty');
+  if (filteredProjects.length === 0) {
+    grid.innerHTML = '';
+    empty.classList.remove('hidden');
+  } else {
+    empty.classList.add('hidden');
+    grid.innerHTML = filteredProjects.map((p) => renderProjectCard(p, p.day - 1)).join('');
+  }
+  document.getElementById('project-count-label').textContent = `${filteredProjects.length} projects · ${completedCount()} completed`;
+}
+
+function applyFilters() {
+  const search = document.getElementById('search-input').value.toLowerCase();
+  const diff = document.getElementById('filter-diff').value;
+  const cat = document.getElementById('filter-cat').value;
+  const sort = document.getElementById('sort-by').value;
+
+  filteredProjects = PROJECTS.filter(p => {
+    const matchSearch = !search || p.title.toLowerCase().includes(search) || p.description.toLowerCase().includes(search) || p.tools.toLowerCase().includes(search);
+    const matchDiff = !diff || p.difficulty === diff;
+    const matchCat = !cat || p.category === cat;
+    return matchSearch && matchDiff && matchCat;
+  });
+
+  if (sort === 'diff') {
+    const dOrder = { Beginner:0, Intermediate:1, Advanced:2, Expert:3 };
+    filteredProjects.sort((a,b) => dOrder[a.difficulty] - dOrder[b.difficulty]);
+  } else if (sort === 'time') {
+    filteredProjects.sort((a,b) => parseFloat(a.estimatedTime) - parseFloat(b.estimatedTime));
+  } else {
+    filteredProjects.sort((a,b) => a.day - b.day);
+  }
+
+  renderProjects();
+}
+
+// Populate category filter
+const cats = [...new Set(PROJECTS.map(p => p.category))].sort();
+const catSelect = document.getElementById('filter-cat');
+cats.forEach(c => {
+  const opt = document.createElement('option');
+  opt.value = c; opt.textContent = c;
+  catSelect.appendChild(opt);
+});
+
+document.getElementById('search-input').addEventListener('input', applyFilters);
+document.getElementById('filter-diff').addEventListener('change', applyFilters);
+document.getElementById('filter-cat').addEventListener('change', applyFilters);
+document.getElementById('sort-by').addEventListener('change', applyFilters);
+
+/* ============================================================
+   PROJECT DETAIL MODAL
+   ============================================================ */
+function openProjectModal(idx) {
+  const p = PROJECTS[idx];
+  if (!p) { console.warn('openProjectModal: invalid idx', idx); return; }
+  const done = !!state.completed[p.day];
+  const html = `
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:var(--sp-2);">
+      <span class="tag tag-primary">Day ${p.day}</span>
+      <span class="tag ${getDiffClass(p.difficulty)}">${p.difficulty}</span>
+      <span class="tag tag-gold">⏱ ${p.estimatedTime}</span>
+    </div>
+    <h2 id="modal-title" style="font-family:var(--ff-head);font-size:var(--fs-h1);font-weight:700;line-height:1.2;margin-bottom:8px;">${p.title}</h2>
+    <p style="color:var(--clr-text3);font-size:var(--fs-caption);margin-bottom:var(--sp-2);">${p.category}</p>
+    <p style="line-height:1.7;margin-bottom:var(--sp-2);">${p.description}</p>
+    <div class="modal-detail-grid">
+      <div class="modal-field"><div class="modal-field-label">🛠 Tools</div><div class="modal-field-val">${p.tools}</div></div>
+      <div class="modal-field"><div class="modal-field-label">🧠 Skills</div><div class="modal-field-val">${p.skills}</div></div>
+      <div class="modal-field"><div class="modal-field-label">📦 Deliverable</div><div class="modal-field-val">${p.deliverable}</div></div>
+      <div class="modal-field"><div class="modal-field-label">🌍 Use Case</div><div class="modal-field-val">${p.useCase}</div></div>
+    </div>
+    <div class="modal-field" style="margin-bottom:var(--sp-2);">
+      <div class="modal-field-label">⚡ Stretch Goal</div>
+      <div class="modal-field-val">${p.stretch}</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="toggleComplete(${p.day}); closeModal(); renderLog();" style="flex:1;">${done ? '✗ Mark Incomplete' : '✓ Mark Complete'}</button>
+      <button class="btn btn-ghost" onclick="closeModal();" style="min-width:80px;">Close</button>
+    </div>`;
+  openModal(html);
+}
+
+/* ============================================================
+   TOGGLE COMPLETE
+   ============================================================ */
+function toggleComplete(day, e) {
+  if (e) e.stopPropagation();
+  if (state.completed[day]) {
+    delete state.completed[day];
+    toast(`Day ${day} marked incomplete`);
+  } else {
+    state.completed[day] = {
+      date: new Date().toISOString(),
+      notes: '',
+      rating: 5
+    };
+    toast(`🎉 Day ${day} complete!`);
+  }
+  saveState();
+  renderHome();
+  renderProjects();
+  renderCategories();
+  renderSkills();
+}
+
+/* ============================================================
+   CATEGORIES
+   ============================================================ */
+const CAT_META = {
+  'Computer Vision':    { icon:'👁', desc:'Image & video understanding' },
+  'NLP':                { icon:'💬', desc:'Text & language processing' },
+  'Tabular ML':         { icon:'📊', desc:'Structured data modeling' },
+  'Reinforcement Learning': { icon:'🎮', desc:'Agents & reward learning' },
+  'Time Series':        { icon:'📈', desc:'Sequential data forecasting' },
+  'MLOps':              { icon:'⚙️', desc:'Production ML engineering' },
+  'AI Agents':          { icon:'🤖', desc:'Autonomous AI systems' },
+  'Edge AI':            { icon:'📱', desc:'On-device ML deployment' },
+  'Generative AI':      { icon:'✨', desc:'Creative & generative models' },
+  'Data Engineering':   { icon:'🔧', desc:'Data pipelines & infrastructure' }
+};
+
+function renderCategories() {
+  const counts = {};
+  PROJECTS.forEach(p => { counts[p.category] = (counts[p.category] || 0) + 1; });
+  const grid = document.getElementById('categories-grid');
+  grid.innerHTML = Object.entries(CAT_META).map(([cat, meta]) => {
+    const count = counts[cat] || 0;
+    const done = PROJECTS.filter(p => p.category === cat && state.completed[p.day]).length;
+    return `<div class="cat-card" onclick="filterByCategory('${cat}')" role="button" tabindex="0" aria-label="Filter by ${cat}">
+      <div class="cat-icon">${meta.icon}</div>
+      <div class="cat-name">${cat}</div>
+      <div class="cat-count">${count} projects · ${done} done</div>
+      <div class="progress-bar-track mt-2"><div class="progress-bar-fill" style="width:${count?Math.round((done/count)*100):0}%"></div></div>
+    </div>`;
+  }).join('');
+
+  document.querySelectorAll('.cat-card').forEach(c => {
+    c.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); c.click(); } });
+  });
+}
+
+function filterByCategory(cat) {
+  // Directly activate projects page without triggering nav click side-effects
+  document.querySelectorAll('.nav-item').forEach(b => {
+    b.classList.remove('active');
+    b.removeAttribute('aria-current');
+  });
+  const projectsBtn = document.querySelector('[data-page="projects"]');
+  projectsBtn.classList.add('active');
+  projectsBtn.setAttribute('aria-current', 'page');
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-projects').classList.add('active');
+  // Now set the filter and render
+  document.getElementById('filter-cat').value = cat;
+  applyFilters();
+  window.scrollTo(0, 0);
+}
+
+/* ============================================================
+   SKILLS
+   ============================================================ */
+const SKILLS_META = [
+  { name:'Python', weight: 1.0 },
+  { name:'Pandas', weight: 0.7 },
+  { name:'NumPy', weight: 0.65 },
+  { name:'Scikit-learn', weight: 0.6 },
+  { name:'TensorFlow', weight: 0.5 },
+  { name:'PyTorch', weight: 0.55 },
+  { name:'FastAPI', weight: 0.4 },
+  { name:'Docker', weight: 0.35 },
+  { name:'SQL', weight: 0.3 },
+  { name:'Cloud Deployment', weight: 0.25 },
+  { name:'Prompt Engineering', weight: 0.45 },
+  { name:'Feature Engineering', weight: 0.55 }
+];
+
+function renderSkills() {
+  const done = completedCount();
+  const skillsEl = document.getElementById('skills-list');
+  skillsEl.innerHTML = SKILLS_META.map(sk => {
+    const pct = Math.min(100, Math.round(done * sk.weight / 3.65));
+    return `<div class="skill-row">
+      <div class="skill-name">${sk.name}</div>
+      <div class="progress-bar-track"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
+      <div class="skill-pct">${pct}%</div>
+    </div>`;
+  }).join('');
+}
+
+/* ============================================================
+   LOG
+   ============================================================ */
+function renderLog() {
+  const logList = document.getElementById('log-list');
+  const logEmpty = document.getElementById('log-empty');
+  const entries = Object.entries(state.completed)
+    .sort((a,b) => new Date(b[1].date || 0) - new Date(a[1].date || 0));
+
+  document.getElementById('log-count-label').textContent = `${entries.length} project${entries.length !== 1 ? 's' : ''} logged`;
+
+  if (entries.length === 0) {
+    logList.innerHTML = '';
+    logEmpty.classList.remove('hidden');
+    return;
+  }
+  logEmpty.classList.add('hidden');
+  logList.innerHTML = entries.map(([day, info]) => {
+    const p = PROJECTS[parseInt(day) - 1];
+    if (!p) return '';
+    const date = info.date ? new Date(info.date).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '—';
+    const rating = Math.min(5, Math.max(0, info.rating || 5));
+    const stars = '★'.repeat(rating) + '☆'.repeat(5 - rating);
+    return `<div class="log-row">
+      <div class="log-day-num"><span style="font-size:9px;opacity:.7;display:block;">DAY</span>${day}</div>
+      <div>
+        <div class="log-info-title">${p.title}</div>
+        <div class="log-info-meta">${p.category} · <span class="tag tag-sm ${getDiffClass(p.difficulty)}" style="font-size:10px;padding:1px 7px;">${p.difficulty}</span> · ${date}</div>
+        ${info.notes ? `<div class="text-sm text-muted mt-1" style="margin-top:4px;">${info.notes}</div>` : ''}
+      </div>
+      <div class="log-stars" title="Rating: ${rating}/5">${stars}</div>
+    </div>`;
+  }).join('');
+}
+
+/* ============================================================
+   EXPORT
+   ============================================================ */
+function exportJSON(data, filename) {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
+  toast('Exported successfully!');
+}
+
+document.getElementById('export-json-btn').addEventListener('click', () => {
+  const data = Object.entries(state.completed).map(([day, info]) => ({
+    day: parseInt(day),
+    title: PROJECTS[parseInt(day)-1]?.title,
+    ...info
+  }));
+  exportJSON(data, 'ml365-log.json');
+});
+
+document.getElementById('export-all-btn').addEventListener('click', () => {
+  const exportData = {
+    exportedAt: new Date().toISOString(),
+    completedCount: completedCount(),
+    completed: Object.entries(state.completed).map(([day, info]) => ({
+      day: parseInt(day),
+      title: PROJECTS[parseInt(day)-1]?.title,
+      category: PROJECTS[parseInt(day)-1]?.category,
+      difficulty: PROJECTS[parseInt(day)-1]?.difficulty,
+      ...info
+    })),
+    allProjects: PROJECTS
+  };
+  exportJSON(exportData, 'ml365-full-export.json');
+});
+
+/* ============================================================
+   SETTINGS
+   ============================================================ */
+document.getElementById('dark-toggle').addEventListener('change', e => {
+  state.theme = e.target.checked ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', state.theme);
+  saveState();
+});
+
+document.getElementById('reset-btn').addEventListener('click', () => {
+  if (confirm('Reset all progress? This cannot be undone.')) {
+    state.completed = {};
+    saveState();
+    toast('Progress reset');
+    renderHome();
+    renderProjects();
+    renderCategories();
+    renderSkills();
+  }
+});
+
+/* ============================================================
+   INIT
+   ============================================================ */
+loadState();
+document.documentElement.setAttribute('data-theme', state.theme);
+document.getElementById('dark-toggle').checked = state.theme === 'dark';
+applyFilters();
+renderCategories();
+renderSkills();
+renderLog();
+renderHome();
+
+/* ============================================================
+   MICRO-INTERACTIONS JS  (all bugs fixed)
+   ============================================================ */
+
+/* ── RIPPLE — delegated, proper size, overflow clip ── */
+function addRipple(el, e) {
+  el.classList.add('ripple-host');
+  const rect = el.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height) * 2;
+  const x    = (e.clientX - rect.left)  - size / 2;
+  const y    = (e.clientY - rect.top)   - size / 2;
+  const r    = document.createElement('span');
+  r.className = 'ripple';
+  r.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y}px;`;
+  el.appendChild(r);
+  r.addEventListener('animationend', () => r.remove(), { once: true });
+}
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.btn, .nav-item, .pc-check');
+  if (btn) addRipple(btn, e);
+}, true);
+
+/* ── ANIMATED COUNTER — reads prev value BEFORE _orig overwrites it ── */
+function animateCounter(el, from, to, duration) {
+  duration = duration || 550;
+  if (from === to) return;
+  const suffix = el.dataset.suffix || '';
+  const start  = performance.now();
+  el.classList.add('updating');
+  const tick = now => {
+    const t    = Math.min((now - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - t, 3);
+    el.textContent = Math.round(from + (to - from) * ease) + suffix;
+    if (t < 1) requestAnimationFrame(tick);
+    else        el.classList.remove('updating');
+  };
+  requestAnimationFrame(tick);
+}
+
+/* Patch renderHome: capture prev values BEFORE _orig runs, animate only changed ones */
+const _origRenderHome = renderHome;
+let _homeHasRenderedOnce = false;
+renderHome = function() {
+  const sDone = document.getElementById('stat-done');
+  const sPct  = document.getElementById('stat-pct');
+  const sRem  = document.getElementById('stat-remaining');
+  const sStr  = document.getElementById('stat-streak');
+  const prevDone = parseInt(sDone.textContent) || 0;
+  const prevPct  = parseInt(sPct.textContent)  || 0;
+  const prevRem  = parseInt(sRem.textContent)  || 365;
+  const prevStr  = parseInt(sStr.textContent)  || 0;
+  _origRenderHome();
+  const newDone = parseInt(sDone.textContent) || 0;
+  const newPct  = parseInt(sPct.textContent)  || 0;
+  const newRem  = parseInt(sRem.textContent)  || 365;
+  const newStr  = parseInt(sStr.textContent)  || 0;
+  // Skip counter animations on very first load (avoids 0→N on startup)
+  if (_homeHasRenderedOnce) {
+    sPct.dataset.suffix = '%';
+    animateCounter(sDone, prevDone, newDone);
+    animateCounter(sPct,  prevPct,  newPct);
+    animateCounter(sRem,  prevRem,  newRem);
+    animateCounter(sStr,  prevStr,  newStr);
+  }
+  _homeHasRenderedOnce = true;
+  // Mark hero + stat cards after first animation — use data-attr, check first to avoid listener leak
+  document.querySelectorAll('.hero-wordmark, .hero-sub').forEach(el => {
+    if (el.dataset.entered) return; // already marked — don't add another listener
+    el.addEventListener('animationend', () => { el.dataset.entered = '1'; }, { once: true });
+  });
+  document.querySelectorAll('.stat-card').forEach(el => {
+    if (el.dataset.entered) return;
+    el.addEventListener('animationend', () => { el.dataset.entered = '1'; }, { once: true });
+  });
+};
+
+/* ── CONFETTI — fires from actual click position, not fallback element ── */
+const CONFETTI_COLORS = ['#8B1A1A','#C9922A','#E8B84B','#1E7850','#5A1A7A','#E05252','#F5CC6A'];
+function burstConfetti(cx, cy) {
+  const frag = document.createDocumentFragment();
+  for (let i = 0; i < 24; i++) {
+    const piece  = document.createElement('div');
+    piece.className = 'confetti-piece';
+    const angle = Math.random() * Math.PI * 2;
+    const dist  = 45 + Math.random() * 85;
+    const tx    = Math.cos(angle) * dist;
+    const ty    = Math.sin(angle) * dist - 40;
+    const rot   = (Math.random() - 0.5) * 640;
+    const dur   = 0.75 + Math.random() * 0.45;
+    const delay = Math.random() * 0.08;
+    const color = CONFETTI_COLORS[i % CONFETTI_COLORS.length];
+    const size  = 4 + Math.random() * 6;
+    piece.style.cssText = `
+      left:${cx}px;top:${cy}px;
+      width:${size}px;height:${size}px;
+      background:${color};
+      border-radius:${Math.random() > 0.45 ? '50%' : '2px'};
+      --tx:${tx}px;--ty:${ty}px;--rot:${rot}deg;
+      --dur:${dur}s;--delay:${delay}s;
+    `;
+    piece.addEventListener('animationend', () => piece.remove(), { once: true });
+    frag.appendChild(piece);
+  }
+  document.body.appendChild(frag);
+}
+
+/* ── YEAR DOT CELEBRATE ── */
+function celebrateDot(day) {
+  const dot = document.querySelector(`.yd[data-day="${day}"]`);
+  if (!dot) return;
+  dot.classList.remove('celebrating');
+  void dot.offsetWidth;
+  dot.classList.add('celebrating');
+  dot.addEventListener('animationend', () => dot.classList.remove('celebrating'), { once: true });
+}
+
+/* ── CHECKMARK — animate correct button after re-render ── */
+function animateCheckBtn(day) {
+  // The grid is re-rendered by _origToggle → use setTimeout to find fresh DOM node
+  setTimeout(() => {
+    const card = document.querySelector(`.project-card.done .pc-check[onclick*="(${day},"]`);
+    if (!card) return;
+    card.classList.add('just-completed');
+    card.addEventListener('animationend', () => card.classList.remove('just-completed'), { once: true });
+  }, 16);
+}
+
+/* ── PATCH toggleComplete ── */
+const _origToggle = toggleComplete;
+toggleComplete = function(day, e) {
+  const wasCompleted = !!state.completed[day];
+  // Capture click position BEFORE _orig re-renders DOM
+  let cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+  if (e && e.clientX) { cx = e.clientX; cy = e.clientY; }
+  else if (e && e.target) {
+    const r = e.target.getBoundingClientRect();
+    cx = r.left + r.width / 2; cy = r.top + r.height / 2;
+  }
+  _origToggle(day, e);
+  if (!wasCompleted) {
+    burstConfetti(cx, cy);
+    celebrateDot(day);
+    animateCheckBtn(day);
+  }
+};
+
+/* ── NAV ICON BOUNCE ── */
+document.querySelectorAll('.nav-item').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const wrap = this.querySelector('.nav-icon-wrap');
+    if (!wrap) return;
+    wrap.classList.remove('bounce');
+    void wrap.offsetWidth;
+    wrap.classList.add('bounce');
+    wrap.addEventListener('animationend', () => wrap.classList.remove('bounce'), { once: true });
+  });
+});
+
+/* ── DIRECTION-AWARE PAGE TRANSITIONS — applied to INCOMING page ── */
+const PAGE_ORDER = ['home','projects','categories','skills','log','settings'];
+let _curPageIdx = 0;
+document.querySelectorAll('.nav-item').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const newIdx = PAGE_ORDER.indexOf(this.dataset.page);
+    if (newIdx === -1 || newIdx === _curPageIdx) return;
+    const dir = newIdx > _curPageIdx ? 'slide-from-right' : 'slide-from-left';
+    // Apply to the INCOMING page after nav handler makes it active
+    requestAnimationFrame(() => {
+      const incoming = document.querySelector('.page.active');
+      if (!incoming) return;
+      incoming.classList.remove('slide-from-right','slide-from-left');
+      void incoming.offsetWidth;
+      incoming.classList.add(dir);
+      incoming.addEventListener('animationend',
+        () => incoming.classList.remove('slide-from-right','slide-from-left'),
+        { once: true }
+      );
+    });
+    _curPageIdx = newIdx;
+  });
+});
+
+/* ── SEARCH CLEAR + INPUT PULSE ── */
+const _si  = document.getElementById('search-input');
+const _scb = document.getElementById('search-clear');
+let   _typingTimer;
+_si.addEventListener('input', () => {
+  _scb.classList.toggle('visible', _si.value.length > 0);
+  document.querySelectorAll('.select').forEach(s => s.classList.toggle('has-value', !!s.value));
+  _si.classList.remove('typing');
+  clearTimeout(_typingTimer);
+  void _si.offsetWidth;
+  _si.classList.add('typing');
+  _typingTimer = setTimeout(() => _si.classList.remove('typing'), 300);
+});
+_scb.addEventListener('click', () => {
+  _si.value = '';
+  _scb.classList.remove('visible');
+  _si.dispatchEvent(new Event('input'));
+  _si.focus();
+});
+document.querySelectorAll('.select').forEach(s => {
+  s.addEventListener('change', () => s.classList.toggle('has-value', !!s.value));
+});
+
+/* ── TODAY-CARD SWEEP — MutationObserver disconnects after inject ── */
+function injectTodaySweep() {
+  const card = document.querySelector('.today-card');
+  if (!card || card.querySelector('.sweep')) return;
+  const sweep = document.createElement('div');
+  sweep.className = 'sweep';
+  card.insertBefore(sweep, card.firstChild);
+}
+const _sweepObserver = new MutationObserver(() => {
+  injectTodaySweep();
+});
+_sweepObserver.observe(document.getElementById('today-spotlight'), { childList: true });
+injectTodaySweep();
+
+/* ── SCROLL REVEAL — single persistent observer, no memory leak ── */
+const _revealIO = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      _revealIO.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -24px 0px' });
+
+function initScrollReveal() {
+  document.querySelectorAll('.card, .stat-card, .cat-card, .log-row, .skill-row').forEach(el => {
+    if (!el.classList.contains('observe-enter')) {
+      el.classList.add('observe-enter');
+      _revealIO.observe(el);
+    }
+  });
+}
+document.querySelectorAll('.nav-item').forEach(btn => {
+  btn.addEventListener('click', () => setTimeout(initScrollReveal, 60));
+});
+initScrollReveal();
+
+/* ── SKILL BAR FILL — single persistent observer ── */
+const _skillIO = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('revealed');
+      _skillIO.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+
+const _origRenderSkills = renderSkills;
+renderSkills = function() {
+  _origRenderSkills();
+  setTimeout(() => {
+    document.querySelectorAll('.skill-row:not(.revealed)').forEach(row => _skillIO.observe(row));
+  }, 40);
+};
+
+/* ── LOG ROWS — JS-driven stagger delays (no CSS :nth-child cap) ── */
+const _origRenderLog = renderLog;
+renderLog = function() {
+  _origRenderLog();
+  document.querySelectorAll('.log-row').forEach((row, i) => {
+    row.style.animationDelay = `${Math.min(i * 0.045, 0.3)}s`;
+  });
+};
+
+/* ── PROJECT CARDS — JS-driven stagger (no CSS :nth-child cap at 8) ── */
+const _origRenderProjects = renderProjects;
+renderProjects = function() {
+  _origRenderProjects();
+  document.querySelectorAll('.project-card').forEach((card, i) => {
+    card.style.animationDelay = `${Math.min(i * 0.028, 0.22)}s`;
+  });
+};
+
+// Apply stagger to the already-rendered initial state (patches defined after INIT)
+document.querySelectorAll('.log-row').forEach((row, i) => {
+  row.style.animationDelay = `${Math.min(i * 0.045, 0.3)}s`;
+});
+document.querySelectorAll('.project-card').forEach((card, i) => {
+  card.style.animationDelay = `${Math.min(i * 0.028, 0.22)}s`;
+});
+
+/* ── MODAL SWIPE DOWN to dismiss ── */
+(function() {
+  const box = document.getElementById('modal-box');
+  let startY = 0, dragging = false;
+  box.addEventListener('touchstart', e => {
+    startY   = e.touches[0].clientY;
+    dragging = true;
+    box.style.transition = 'none';
+  }, { passive: true });
+  box.addEventListener('touchmove', e => {
+    if (!dragging) return;
+    const dy = e.touches[0].clientY - startY;
+    if (dy > 0 && box.scrollTop === 0)
+      box.style.transform = `translateY(${Math.min(dy * 0.55, 90)}px)`;
+  }, { passive: true });
+  box.addEventListener('touchend', e => {
+    dragging = false;
+    const dy = e.changedTouches[0].clientY - startY;
+    box.style.transition = '';
+    if (dy > 64) {
+      box.style.transform = 'translateY(110%)';
+      setTimeout(() => { box.style.transform = ''; closeModal(); }, 220);
+    } else {
+      box.style.transform = '';
+    }
+  });
+})();
+
+/* ── LONG-PRESS year dots — confetti from dot position ── */
+(function() {
+  let _pressTimer;
+  const dotsEl = document.getElementById('year-dots');
+  dotsEl.addEventListener('pointerdown', e => {
+    const dot = e.target.closest('.yd');
+    if (!dot) return;
+    _pressTimer = setTimeout(() => {
+      const day = parseInt(dot.dataset.day);
+      if (state.completed[day]) return;
+      const r  = dot.getBoundingClientRect();
+      const cx = r.left + r.width / 2;
+      const cy = r.top  + r.height / 2;
+      // Call _origToggle directly — bypass outer patch to control confetti position
+      _origToggle(day);
+      burstConfetti(cx, cy);
+      celebrateDot(day);
+      animateCheckBtn(day);
+    }, 480);
+  });
+  dotsEl.addEventListener('pointerup',    () => clearTimeout(_pressTimer));
+  dotsEl.addEventListener('pointercancel',() => clearTimeout(_pressTimer));
+  dotsEl.addEventListener('pointerleave', () => clearTimeout(_pressTimer));
+})();
+
+/* ── DARK MODE — transition ALL surfaces via class on html; clearTimeout prevents stuck class ── */
+let _themeTimer;
+document.getElementById('dark-toggle').addEventListener('change', () => {
+  clearTimeout(_themeTimer);
+  document.documentElement.classList.add('theme-transitioning');
+  _themeTimer = setTimeout(() => document.documentElement.classList.remove('theme-transitioning'), 420);
+});
+
+/* ── STAT CARD MICRO-TILT — throttled getBoundingClientRect ── */
+document.querySelectorAll('.stat-card').forEach(card => {
+  let rect  = null;
+  let rafId = null;
+  card.addEventListener('mouseenter', () => { rect = card.getBoundingClientRect(); });
+  card.addEventListener('mousemove', e => {
+    if (!rect) return;
+    if (rafId) return; // throttle to 1 per frame
+    rafId = requestAnimationFrame(() => {
+      rafId = null;
+      const x = ((e.clientX - rect.left) / rect.width  - 0.5) * 9;
+      const y = ((e.clientY - rect.top)  / rect.height - 0.5) * 9;
+      card.style.transform = `perspective(420px) rotateX(${-y}deg) rotateY(${x}deg) scale(1.025)`;
+    });
+  });
+  card.addEventListener('mouseleave', () => {
+    rect  = null;
+    rafId = null;
+    card.style.transition = 'transform 0.38s ease';
+    card.style.transform  = '';
+    setTimeout(() => { card.style.transition = ''; }, 400);
+  });
+});
+
+
+/* ============================================================
+   PWA: SERVICE WORKER (INLINE)
+   ============================================================ */
+if ('serviceWorker' in navigator) {
+  const swCode = `
+const CACHE = 'ml365-v1';
+self.addEventListener('install', e => {
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(['/'])));
+  self.skipWaiting();
+});
+self.addEventListener('activate', e => {
+  e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))));
+  self.clients.claim();
+});
+self.addEventListener('fetch', e => {
+  e.respondWith(caches.match(e.request).then(r => r || fetch(e.request).catch(() => new Response('Offline', {status:503}))));
+});`;
+  const blob = new Blob([swCode], { type:'application/javascript' });
+  const swURL = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swURL).catch(() => {});
+}
+
+/* ============================================================
+   PWA: MANIFEST (DYNAMIC)
+   ============================================================ */
+(function() {
+  const manifest = {
+    name: '2026 · ML365 Mini Projects',
+    short_name: 'ML365',
+    description: '365 Machine Learning Mini Projects for 2026',
+    start_url: '/',
+    display: 'standalone',
+    background_color: '#FBF7F2',
+    theme_color: '#8B1A1A',
+    icons: [
+      { src: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="%238B1A1A"/><text y="68" x="50" text-anchor="middle" font-size="55" font-family="Georgia,serif" fill="%23C9922A">ML</text></svg>', sizes:'192x192', type:'image/svg+xml' }
+    ]
+  };
+  const blob = new Blob([JSON.stringify(manifest)], { type:'application/manifest+json' });
+  const link = document.createElement('link');
+  link.rel = 'manifest';
+  link.href = URL.createObjectURL(blob);
+  document.head.appendChild(link);
+})();
+</script>
+</body>
+</html>
